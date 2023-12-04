@@ -1,0 +1,10 @@
+E:\卒研\insatsu\insatsu\bin\Debug\insatsu.exe.config
+E:\卒研\insatsu\insatsu\bin\Debug\insatsu.exe
+E:\卒研\insatsu\insatsu\bin\Debug\insatsu.pdb
+E:\卒研\insatsu\insatsu\obj\Debug\insatsu.csproj.AssemblyReference.cache
+E:\卒研\insatsu\insatsu\obj\Debug\insatsu.Form1.resources
+E:\卒研\insatsu\insatsu\obj\Debug\insatsu.Properties.Resources.resources
+E:\卒研\insatsu\insatsu\obj\Debug\insatsu.csproj.GenerateResource.cache
+E:\卒研\insatsu\insatsu\obj\Debug\insatsu.csproj.CoreCompileInputs.cache
+E:\卒研\insatsu\insatsu\obj\Debug\insatsu.exe
+E:\卒研\insatsu\insatsu\obj\Debug\insatsu.pdb
