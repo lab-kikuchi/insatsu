@@ -43,6 +43,7 @@
             this.printside_comboBox = new System.Windows.Forms.ComboBox();
             this.circulation_textBox = new System.Windows.Forms.TextBox();
             this.printcount_button = new System.Windows.Forms.Button();
+            this.textBox2 = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.machinecount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.printcount)).BeginInit();
             this.SuspendLayout();
@@ -51,7 +52,7 @@
             // 
             this.textBox1.Location = new System.Drawing.Point(41, 396);
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(55, 19);
+            this.textBox1.Size = new System.Drawing.Size(185, 19);
             this.textBox1.TabIndex = 0;
             this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
@@ -206,6 +207,7 @@
             this.circulation_textBox.Name = "circulation_textBox";
             this.circulation_textBox.Size = new System.Drawing.Size(121, 19);
             this.circulation_textBox.TabIndex = 13;
+            this.circulation_textBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.circulation_textBox_KeyPress);
             // 
             // printcount_button
             // 
@@ -217,11 +219,19 @@
             this.printcount_button.UseVisualStyleBackColor = true;
             this.printcount_button.Click += new System.EventHandler(this.printcount_button_Click);
             // 
+            // textBox2
+            // 
+            this.textBox2.Location = new System.Drawing.Point(290, 396);
+            this.textBox2.Name = "textBox2";
+            this.textBox2.Size = new System.Drawing.Size(201, 19);
+            this.textBox2.TabIndex = 15;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(585, 474);
+            this.Controls.Add(this.textBox2);
             this.Controls.Add(this.printcount_button);
             this.Controls.Add(this.circulation_textBox);
             this.Controls.Add(this.printside_comboBox);
@@ -264,6 +274,7 @@
         private System.Windows.Forms.ComboBox printside_comboBox;
         private System.Windows.Forms.TextBox circulation_textBox;
         private System.Windows.Forms.Button printcount_button;
+        private System.Windows.Forms.TextBox textBox2;
     }
 }
 
