@@ -107,19 +107,34 @@
             // 
             this.machinesize_comboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.machinesize_comboBox.FormattingEnabled = true;
+            this.machinesize_comboBox.Items.AddRange(new object[] {
+            "A全判",
+            "A半裁",
+            "B全判",
+            "B半裁",
+            "菊全判",
+            "菊半裁",
+            "四六全判",
+            "四六半裁"});
             this.machinesize_comboBox.Location = new System.Drawing.Point(340, 32);
             this.machinesize_comboBox.Name = "machinesize_comboBox";
             this.machinesize_comboBox.Size = new System.Drawing.Size(121, 20);
             this.machinesize_comboBox.TabIndex = 7;
+            this.machinesize_comboBox.SelectionChangeCommitted += new System.EventHandler(this.machinesize_comboBox_SelectionChangeCommitted);
             // 
             // machinecolor_comboBox
             // 
             this.machinecolor_comboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.machinecolor_comboBox.FormattingEnabled = true;
+            this.machinecolor_comboBox.Items.AddRange(new object[] {
+            "1",
+            "2",
+            "4"});
             this.machinecolor_comboBox.Location = new System.Drawing.Point(340, 73);
             this.machinecolor_comboBox.Name = "machinecolor_comboBox";
             this.machinecolor_comboBox.Size = new System.Drawing.Size(121, 20);
             this.machinecolor_comboBox.TabIndex = 8;
+            this.machinecolor_comboBox.SelectionChangeCommitted += new System.EventHandler(this.machinecolor_comboBox_SelectionChangeCommitted);
             // 
             // Form1
             // 

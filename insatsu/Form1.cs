@@ -22,12 +22,12 @@ namespace insatsu
         public struct Machine   //構造体で印刷機を表す
         {
             int rpm;    //回転数
-            int color;  //色数
+            public int color;  //色数
             //string size;    //サイズ
-            int size_a; //A4サイズを考えた時の数
-            int size_b; //B5サイズを考えた時の数
+            public int size_a; //A4サイズを考えた時の数
+            public int size_b; //B5サイズを考えた時の数
 
-            private void rpm_set(int R)  //回転数の設定
+            public void rpm_set(int R)  //回転数の設定
             { this.rpm = R; }
 
             public void size_div(string size)   //サイズをA4サイズに分割
@@ -98,12 +98,14 @@ namespace insatsu
         {
             //印刷機の数を取得
             Machine_cnt = decimal.ToInt32(machinecount.Value);
+            Machines = new Machine[Machine_cnt];
         }
 
         private void printcount_ValueChanged(object sender, EventArgs e)
         {
             //印刷物の数を取得
             Print_cnt = decimal.ToInt32(printcount.Value);
+            Prints = new Print[Print_cnt];
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -111,12 +113,27 @@ namespace insatsu
             int cnt;
             for (cnt = 1; cnt <= Machine_cnt; cnt++){
                 machine_listBox.Items.Add("印刷機" + cnt);
+                Machines[cnt - 1].rpm_set(R);
             }
         }
 
         private void machine_listBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             machine_listInd = machine_listBox.SelectedIndex;
+            textBox1.Text = machine_listInd.ToString();
+        }
+
+        private void machinesize_comboBox_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            Machines[machine_listInd].size_div(machinesize_comboBox.Text);
+            textBox1.Text += Machines[machine_listInd].size_a.ToString();
+            textBox1.Text += Machines[machine_listInd].size_b.ToString();
+        }
+
+        private void machinecolor_comboBox_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            Machines[machine_listInd].color = int.Parse(machinecolor_comboBox.Text);
+            textBox1.Text += Machines[machine_listInd].color.ToString();
         }
     }
 }
