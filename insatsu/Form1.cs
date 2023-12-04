@@ -17,7 +17,9 @@ namespace insatsu
         public int Print_cnt;   //印刷物の種類の数
         public Print[] Prints; //印刷物
         private int R = 5000;
-        private int machine_listInd;
+
+        private int machine_listInd;    //リスト内の印刷機のインデックス
+        private int print_listInd;  //リスト内の印刷物のインデックス
 
         public struct Machine   //構造体で印刷機を表す
         {
@@ -61,7 +63,7 @@ namespace insatsu
             //string size;    //サイズ
             public int size_a;
             public int size_b;
-            public int print_page; //両面印刷/片面印刷
+            public int print_side; //両面印刷=1/片面印刷=0
 
             public void size_div(string size)  //サイズを最小サイズに分割
             {
@@ -104,17 +106,8 @@ namespace insatsu
         private void printcount_ValueChanged(object sender, EventArgs e)
         {
             //印刷物の数を取得
-            Print_cnt = decimal.ToInt32(printcount.Value);
-            Prints = new Print[Print_cnt];
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            int cnt;
-            for (cnt = 1; cnt <= Machine_cnt; cnt++){
-                machine_listBox.Items.Add("印刷機" + cnt);
-                Machines[cnt - 1].rpm_set(R);
-            }
+            //Print_cnt = decimal.ToInt32(printcount.Value);
+            //Prints = new Print[Print_cnt];
         }
 
         private void machine_listBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -135,5 +128,57 @@ namespace insatsu
             Machines[machine_listInd].color = int.Parse(machinecolor_comboBox.Text);
             textBox1.Text += Machines[machine_listInd].color.ToString();
         }
+
+
+        private void machinecount_button_Click(object sender, EventArgs e)
+        {
+            int cnt;
+            for (cnt = 1; cnt <= Machine_cnt; cnt++)
+            {
+                machine_listBox.Items.Add("印刷機" + cnt);
+                Machines[cnt - 1].rpm_set(R);
+            }
+        }
+
+        private void print_listBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            print_listInd = print_listBox.SelectedIndex;
+            //textBox1.Text = print_listInd.ToString();
+        }
+
+        private void printcount_button_Click(object sender, EventArgs e)    //印刷物のリスト表示
+        {
+            Print_cnt = decimal.ToInt32(printcount.Value);
+            Prints = new Print[Print_cnt];
+
+            print_listBox.Items.Clear();
+            int cnt;
+            for (cnt = 1; cnt <= Print_cnt; cnt++)
+            {
+                print_listBox.Items.Add("印刷物" + cnt);
+            }
+        }
+
+        private void printsize_comboBox_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            Prints[print_listInd].size_div(printsize_comboBox.Text);
+        }
+
+        private void printcolor_comboBox_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            Prints[print_listInd].color = int.Parse(printcolor_comboBox.Text);
+        }
+
+        private void printside_comboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (printcolor_comboBox.Text == "両面印刷")
+            {
+                Prints[print_listInd].print_side = 1;
+            }else if(printcolor_comboBox.Text == "片面印刷")
+            {
+                Prints[print_listInd].print_side = 0;
+            }
+        }
+
     }
 }

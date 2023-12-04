@@ -28,9 +28,9 @@ namespace insatsu
             this.name = name;
         }
 
-        public void Set_Plan(List<Print> print)
+        public void Set_Plan(Prints prints)
         {
-            if (check_index()) this.schedule.Add(print);
+            if (check_index()) this.schedule.Add(prints);
         }
 
         private bool check_index()
