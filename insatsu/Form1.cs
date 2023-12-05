@@ -25,30 +25,30 @@ namespace insatsu
         {
             int rpm;    //回転数
             public int color;  //色数
-            //string size;    //サイズ
+            public string size;    //サイズ
             public int size_a; //A4サイズを考えた時の数
             public int size_b; //B5サイズを考えた時の数
 
             public void rpm_set(int R)  //回転数の設定
             { this.rpm = R; }
 
-            public void size_div(string size)   //サイズをA4サイズに分割
+            public void size_div()   //サイズをA4サイズに分割
             {
                 this.size_a = 0;
                 this.size_b = 0;
-                if (size == "A全判" || size == "菊全判")
+                if (this.size == "A全判" || this.size == "菊全判")
                 {
                     this.size_a = 8;
                 }
-                else if (size == "A半裁" || size == "菊半裁")
+                else if (this.size == "A半裁" || this.size == "菊半裁")
                 {
                     this.size_a = 4;
                 }
-                else if (size == "B全判" || size == "四六全判")
+                else if (this.size == "B全判" || this.size == "四六全判")
                 {
                     this.size_b = 16;
                 }
-                else if (size == "B半裁" || size == "四六半裁")
+                else if (this.size == "B半裁" || this.size == "四六半裁")
                 {
                     this.size_b = 8;
                 }
@@ -60,24 +60,24 @@ namespace insatsu
             public int deadline;   //納期
             public int circulation;    //部数
             public int color;  //色数
-            //string size;    //サイズ
+            public string size;    //サイズ
             public int size_a;
             public int size_b;
-            public int print_side; //両面印刷=1/片面印刷=0
+            public string side; //両面印刷/片面印刷
 
-            public void size_div(string size)  //サイズを最小サイズに分割
+            public void size_div()  //サイズを最小サイズに分割
             {
                 this.size_a = 0;
                 this.size_b = 0;
-                if (size == "A1") { this.size_a = 8; }
-                else if (size == "A2") { this.size_a = 4; }
-                else if (size == "A3") { this.size_a = 2; }
-                else if (size == "A4") { this.size_a = 1; }
-                else if (size == "B1") { this.size_b = 16; }
-                else if (size == "B2") { this.size_b = 8; }
-                else if (size == "B3") { this.size_b = 4; }
-                else if (size == "B4") { this.size_b = 2; }
-                else if (size == "B5") { this.size_b = 1; }
+                if (this.size == "A1") { this.size_a = 8; }
+                else if (this.size == "A2") { this.size_a = 4; }
+                else if (this.size == "A3") { this.size_a = 2; }
+                else if (this.size == "A4") { this.size_a = 1; }
+                else if (this.size == "B1") { this.size_b = 16; }
+                else if (this.size == "B2") { this.size_b = 8; }
+                else if (this.size == "B3") { this.size_b = 4; }
+                else if (this.size == "B4") { this.size_b = 2; }
+                else if (this.size == "B5") { this.size_b = 1; }
             }
         }
 
@@ -95,6 +95,7 @@ namespace insatsu
             printsize_comboBox.Enabled = false;
             printside_comboBox.Enabled = false;
             printcolor_comboBox.Enabled = false;
+
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -116,9 +117,13 @@ namespace insatsu
             //Prints = new Print[Print_cnt];
         }
 
-        private void machine_listBox_SelectedIndexChanged(object sender, EventArgs e)
+        private void machine_listBox_SelectedIndexChanged(object sender, EventArgs e)   //リストから印刷機選択
         {
-            machine_listInd = machine_listBox.SelectedIndex;
+            machine_listInd = machine_listBox.SelectedIndex;    //現在選択中の印刷機のインデックス取得
+
+            //選択している印刷機の要素を表示
+            machinesize_comboBox.Text = Machines[machine_listInd].size;
+            machinecolor_comboBox.Text = Machines[machine_listInd].color.ToString();
 
             //印刷機の要素を入力可能にする
             machinesize_comboBox.Enabled = true;
@@ -127,14 +132,15 @@ namespace insatsu
             textBox1.Text = machine_listInd.ToString();
         }
 
-        private void machinesize_comboBox_SelectionChangeCommitted(object sender, EventArgs e)
+        private void machinesize_comboBox_SelectionChangeCommitted(object sender, EventArgs e)  //印刷機のサイズの取得
         {
-            Machines[machine_listInd].size_div(machinesize_comboBox.Text);
-            textBox1.Text += Machines[machine_listInd].size_a.ToString();
+            Machines[machine_listInd].size = machinesize_comboBox.Text;
+            Machines[machine_listInd].size_div();
+            textBox1.Text += Machines[machine_listInd].size_a.ToString();   //テスト用
             textBox1.Text += Machines[machine_listInd].size_b.ToString();
         }
 
-        private void machinecolor_comboBox_SelectionChangeCommitted(object sender, EventArgs e)
+        private void machinecolor_comboBox_SelectionChangeCommitted(object sender, EventArgs e) //何色機か取得
         {
             Machines[machine_listInd].color = int.Parse(machinecolor_comboBox.Text);
             textBox1.Text += Machines[machine_listInd].color.ToString();
@@ -154,11 +160,18 @@ namespace insatsu
                 machine_listBox.Items.Add("印刷機" + cnt); //リストに追加
                 Machines[cnt - 1].rpm_set(R);   //回転数の設定
             }
+
         }
 
-        private void print_listBox_SelectedIndexChanged(object sender, EventArgs e)
+        private void print_listBox_SelectedIndexChanged(object sender, EventArgs e) //リストから印刷物選択
         {
             print_listInd = print_listBox.SelectedIndex;    //現在選択中の印刷物のインデックス取得
+
+            //選択している印刷物の要素を表示
+            circulation_textBox.Text = Prints[print_listInd].circulation.ToString();
+            printsize_comboBox.Text = Prints[print_listInd].size;
+            printside_comboBox.Text = Prints[print_listInd].side;
+            printcolor_comboBox.Text = Prints[print_listInd].color.ToString();
 
             //印刷物の要素を入力可能にする
             circulation_textBox.ReadOnly = false;
@@ -184,33 +197,28 @@ namespace insatsu
 
         }
 
-        private void printsize_comboBox_SelectionChangeCommitted(object sender, EventArgs e)
+        private void printsize_comboBox_SelectionChangeCommitted(object sender, EventArgs e)    //印刷物のサイズ取得
         {
-            Prints[print_listInd].size_div(printsize_comboBox.Text);
+            Prints[print_listInd].size = printsize_comboBox.Text;
+            Prints[print_listInd].size_div();
             textBox2.Text += Prints[print_listInd].size_a.ToString();
             textBox2.Text += Prints[print_listInd].size_b.ToString();
         }
 
-        private void printcolor_comboBox_SelectionChangeCommitted(object sender, EventArgs e)
+        private void printcolor_comboBox_SelectionChangeCommitted(object sender, EventArgs e)   //印刷物が何色刷りか取得
         {
             Prints[print_listInd].color = int.Parse(printcolor_comboBox.Text);
             textBox2.Text += Prints[print_listInd].color.ToString();
         }
 
-        private void printside_comboBox_SelectedIndexChanged(object sender, EventArgs e)
+        private void printside_comboBox_SelectedIndexChanged(object sender, EventArgs e)    //両面印刷/片面印刷どちらか取得
         {
-            if (printside_comboBox.Text == "両面印刷")
-            {
-                Prints[print_listInd].print_side = 1;
-            }else if(printside_comboBox.Text == "片面印刷")
-            {
-                Prints[print_listInd].print_side = 0;
-            }
+            Prints[print_listInd].side = printside_comboBox.Text;
 
-            textBox2.Text += Prints[print_listInd].print_side.ToString();
+            textBox2.Text += Prints[print_listInd].side.ToString();
         }
 
-        private void circulation_textBox_KeyPress(object sender, KeyPressEventArgs e)
+        private void circulation_textBox_KeyPress(object sender, KeyPressEventArgs e)   //部数取得
         {
             if (e.KeyChar == (char)Keys.Enter)  //エンターキーが押されたとき
             {
