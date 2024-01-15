@@ -21,7 +21,6 @@ namespace insatsu
         public Print outprint;  //出力する印刷物
 
         //テスト用
-        //public List<List<string>> test_outmachine = new List<List<string>>();
         public List<List<List<string>>> test_oomachine = new List<List<List<string>>>();
         public List<List<string>> test_schedule = new List<List<string>>();
         public List<string> test_oprint;
@@ -295,6 +294,8 @@ namespace insatsu
             int circulation_cnt = (int)Math.Ceiling((double)prints[print_ind].circulation / (double)machines[machine_ind].rpm);
             int side_cnt = 0;
 
+            int schedule_ind;
+
             if (prints[print_ind].side == "両面印刷")
             {
                 side_cnt = 2;
@@ -310,40 +311,35 @@ namespace insatsu
                 {
                     while (circulation_cnt > 0)
                     {
-                        outprint = new Print(prints[print_ind].name, prints[print_ind].circulation);
-                        //outmachines[machine_ind].Prints = outprint; //?MachineクラスのPrintsの作り方がわからん
-                        /*割り当てリストに1時間分割り当て
-                        outmachines[machine_ind].Set_Plan(outprint);*/
-
                         //テスト用
+                        test_oprint = new List<string>();
                         test_oprint.Add(prints[print_ind].name);
-                        //test_schedule.Add(test_oprint);
                         test_oomachine[machine_ind].Add(test_oprint);
 
                         circulation_cnt--;
                     }
                     color_cnt--;
                     circulation_cnt = (int)Math.Ceiling((double)prints[print_ind].circulation / (double)machines[machine_ind].rpm);
-                    /*schedule_ind = test_oomachine[machine_ind].Count() - 1;
+                    schedule_ind = test_oomachine[machine_ind].Count() - 1;
                     if (!test_oomachine[machine_ind][schedule_ind].Contains("準備時間"))
                     {
                         /*準備時間未設定なら準備時間を入れる*/
-                    /*test_oprint = new List<string>();
+                    test_oprint = new List<string>();
                     test_oprint.Add("準備時間");
                     test_oomachine[machine_ind].Add(test_oprint);
-                    }*/
+                    }
                 }
                 side_cnt--;
                 color_cnt = (int)Math.Ceiling((double)prints[print_ind].color / (double)machines[machine_ind].color);
                 circulation_cnt = (int)Math.Ceiling((double)prints[print_ind].circulation / (double)machines[machine_ind].rpm);
-                /*schedule_ind = test_oomachine[machine_ind].Count() - 1;
+                schedule_ind = test_oomachine[machine_ind].Count() - 1;
                 if (!test_oomachine[machine_ind][schedule_ind].Contains("準備時間"))
                 {
 
                     test_oprint = new List<string>();
                     test_oprint.Add("準備時間");
                     test_oomachine[machine_ind].Add(test_oprint);
-                }*/
+                }
             }
         }
 
@@ -402,36 +398,41 @@ namespace insatsu
                         {
                             if (side_cnt[cnt] <= 0)
                             {
+                                /*削除対象のインデックスを確保*/
                                 remove_ind.Add(cnt);
+                                /*準備時間未設定なら準備時間を入れる*/
+                                schedule_ind = test_oomachine[machine_ind].Count() - 1;
+                                if (!test_oomachine[machine_ind][schedule_ind].Contains("準備時間"))
+                                {
+                                    test_oprint = new List<string>();
+                                    test_oprint.Add("準備時間");
+                                    test_oomachine[machine_ind].Add(test_oprint);
+                                }
                                 continue;
                             }
                             else
                             {
                                 side_cnt[cnt]--;
                                 color_cnt[cnt] = (int)Math.Ceiling((double)assignprints[cnt].color / (double)machines[machine_ind].color) - 1;
-                                /*schedule_ind = test_oomachine[machine_ind].Count() - 1;
+                                schedule_ind = test_oomachine[machine_ind].Count() - 1;
                                 if (!test_oomachine[machine_ind][schedule_ind].Contains("準備時間"))
                                 {
                                     test_oprint = new List<string>();
                                     test_oprint.Add("準備時間");
-                                    //test_oprint.Add("色準備時間");
-                                    //test_schedule.Add(test_oprint);
                                     test_oomachine[machine_ind].Add(test_oprint);
-                                }*/
+                                }
                             }
                         }
                         else
                         {
                             color_cnt[cnt]--;
-                            /*schedule_ind = test_oomachine[machine_ind].Count() - 1;
+                            schedule_ind = test_oomachine[machine_ind].Count() - 1;
                             if (!test_oomachine[machine_ind][schedule_ind].Contains("準備時間"))
                             {
                                 test_oprint = new List<string>();
                                 test_oprint.Add("準備時間");
-                                //test_oprint.Add("裏面の版準備時間");
-                                //test_schedule.Add(test_oprint);
                                 test_oomachine[machine_ind].Add(test_oprint);
-                            }*/
+                            }
                         }
                         circulation_cnt[cnt] = (int)Math.Ceiling((double)assignprints[cnt].circulation / (double)machines[machine_ind].rpm);  //部数カウント再設定
                     }
@@ -440,6 +441,9 @@ namespace insatsu
                 for (int i = remove_ind.Count() - 1; i >= 0; i--)
                 {
                     assignprints.RemoveAt(remove_ind[i]);
+                    color_cnt.RemoveAt(remove_ind[i]);  //色変え回数
+                    circulation_cnt.RemoveAt(remove_ind[i]);
+                    side_cnt.RemoveAt(remove_ind[i]);   //両面/片面印刷の属性
                 }
             }
         }
