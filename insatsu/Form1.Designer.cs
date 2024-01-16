@@ -44,6 +44,13 @@
             this.circulation_textBox = new System.Windows.Forms.TextBox();
             this.printcount_button = new System.Windows.Forms.Button();
             this.textBox2 = new System.Windows.Forms.TextBox();
+            this.start_button = new System.Windows.Forms.Button();
+            this.machinesize_label = new System.Windows.Forms.Label();
+            this.machinecolor_label = new System.Windows.Forms.Label();
+            this.printsize_label = new System.Windows.Forms.Label();
+            this.printcolor_label = new System.Windows.Forms.Label();
+            this.printside__label = new System.Windows.Forms.Label();
+            this.circulation_label = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.machinecount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.printcount)).BeginInit();
             this.SuspendLayout();
@@ -51,8 +58,9 @@
             // textBox1
             // 
             this.textBox1.Location = new System.Drawing.Point(41, 396);
+            this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(185, 19);
+            this.textBox1.Size = new System.Drawing.Size(185, 218);
             this.textBox1.TabIndex = 0;
             this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
@@ -123,7 +131,7 @@
             "菊半裁",
             "四六全判",
             "四六半裁"});
-            this.machinesize_comboBox.Location = new System.Drawing.Point(340, 32);
+            this.machinesize_comboBox.Location = new System.Drawing.Point(409, 39);
             this.machinesize_comboBox.Name = "machinesize_comboBox";
             this.machinesize_comboBox.Size = new System.Drawing.Size(121, 20);
             this.machinesize_comboBox.TabIndex = 7;
@@ -137,7 +145,7 @@
             "1",
             "2",
             "4"});
-            this.machinecolor_comboBox.Location = new System.Drawing.Point(340, 73);
+            this.machinecolor_comboBox.Location = new System.Drawing.Point(409, 80);
             this.machinecolor_comboBox.Name = "machinecolor_comboBox";
             this.machinecolor_comboBox.Size = new System.Drawing.Size(121, 20);
             this.machinecolor_comboBox.TabIndex = 8;
@@ -167,7 +175,7 @@
             "B3",
             "B4",
             "B5"});
-            this.printsize_comboBox.Location = new System.Drawing.Point(340, 177);
+            this.printsize_comboBox.Location = new System.Drawing.Point(409, 179);
             this.printsize_comboBox.Name = "printsize_comboBox";
             this.printsize_comboBox.Size = new System.Drawing.Size(121, 20);
             this.printsize_comboBox.TabIndex = 10;
@@ -182,7 +190,7 @@
             "2",
             "3",
             "4"});
-            this.printcolor_comboBox.Location = new System.Drawing.Point(340, 203);
+            this.printcolor_comboBox.Location = new System.Drawing.Point(409, 205);
             this.printcolor_comboBox.Name = "printcolor_comboBox";
             this.printcolor_comboBox.Size = new System.Drawing.Size(121, 20);
             this.printcolor_comboBox.TabIndex = 11;
@@ -195,7 +203,7 @@
             this.printside_comboBox.Items.AddRange(new object[] {
             "片面印刷",
             "両面印刷"});
-            this.printside_comboBox.Location = new System.Drawing.Point(340, 230);
+            this.printside_comboBox.Location = new System.Drawing.Point(409, 232);
             this.printside_comboBox.Name = "printside_comboBox";
             this.printside_comboBox.Size = new System.Drawing.Size(121, 20);
             this.printside_comboBox.TabIndex = 12;
@@ -203,7 +211,7 @@
             // 
             // circulation_textBox
             // 
-            this.circulation_textBox.Location = new System.Drawing.Point(340, 257);
+            this.circulation_textBox.Location = new System.Drawing.Point(409, 259);
             this.circulation_textBox.Name = "circulation_textBox";
             this.circulation_textBox.Size = new System.Drawing.Size(121, 19);
             this.circulation_textBox.TabIndex = 13;
@@ -226,11 +234,82 @@
             this.textBox2.Size = new System.Drawing.Size(201, 19);
             this.textBox2.TabIndex = 15;
             // 
+            // start_button
+            // 
+            this.start_button.Location = new System.Drawing.Point(455, 304);
+            this.start_button.Name = "start_button";
+            this.start_button.Size = new System.Drawing.Size(75, 23);
+            this.start_button.TabIndex = 16;
+            this.start_button.Text = "開始";
+            this.start_button.UseVisualStyleBackColor = true;
+            this.start_button.Click += new System.EventHandler(this.start_button_Click);
+            // 
+            // machinesize_label
+            // 
+            this.machinesize_label.AutoSize = true;
+            this.machinesize_label.Location = new System.Drawing.Point(292, 42);
+            this.machinesize_label.Name = "machinesize_label";
+            this.machinesize_label.Size = new System.Drawing.Size(34, 12);
+            this.machinesize_label.TabIndex = 17;
+            this.machinesize_label.Text = "サイズ";
+            // 
+            // machinecolor_label
+            // 
+            this.machinecolor_label.AutoSize = true;
+            this.machinecolor_label.Location = new System.Drawing.Point(292, 84);
+            this.machinecolor_label.Name = "machinecolor_label";
+            this.machinecolor_label.Size = new System.Drawing.Size(17, 12);
+            this.machinecolor_label.TabIndex = 18;
+            this.machinecolor_label.Text = "色";
+            // 
+            // printsize_label
+            // 
+            this.printsize_label.AutoSize = true;
+            this.printsize_label.Location = new System.Drawing.Point(290, 182);
+            this.printsize_label.Name = "printsize_label";
+            this.printsize_label.Size = new System.Drawing.Size(34, 12);
+            this.printsize_label.TabIndex = 19;
+            this.printsize_label.Text = "サイズ";
+            // 
+            // printcolor_label
+            // 
+            this.printcolor_label.AutoSize = true;
+            this.printcolor_label.Location = new System.Drawing.Point(292, 208);
+            this.printcolor_label.Name = "printcolor_label";
+            this.printcolor_label.Size = new System.Drawing.Size(17, 12);
+            this.printcolor_label.TabIndex = 20;
+            this.printcolor_label.Text = "色";
+            // 
+            // printside__label
+            // 
+            this.printside__label.AutoSize = true;
+            this.printside__label.Location = new System.Drawing.Point(292, 235);
+            this.printside__label.Name = "printside__label";
+            this.printside__label.Size = new System.Drawing.Size(83, 12);
+            this.printside__label.TabIndex = 21;
+            this.printside__label.Text = "両面/片面印刷";
+            // 
+            // circulation_label
+            // 
+            this.circulation_label.AutoSize = true;
+            this.circulation_label.Location = new System.Drawing.Point(290, 262);
+            this.circulation_label.Name = "circulation_label";
+            this.circulation_label.Size = new System.Drawing.Size(29, 12);
+            this.circulation_label.TabIndex = 22;
+            this.circulation_label.Text = "部数";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(585, 474);
+            this.ClientSize = new System.Drawing.Size(782, 720);
+            this.Controls.Add(this.circulation_label);
+            this.Controls.Add(this.printside__label);
+            this.Controls.Add(this.printcolor_label);
+            this.Controls.Add(this.printsize_label);
+            this.Controls.Add(this.machinecolor_label);
+            this.Controls.Add(this.machinesize_label);
+            this.Controls.Add(this.start_button);
             this.Controls.Add(this.textBox2);
             this.Controls.Add(this.printcount_button);
             this.Controls.Add(this.circulation_textBox);
@@ -275,6 +354,13 @@
         private System.Windows.Forms.TextBox circulation_textBox;
         private System.Windows.Forms.Button printcount_button;
         private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.Button start_button;
+        private System.Windows.Forms.Label machinesize_label;
+        private System.Windows.Forms.Label machinecolor_label;
+        private System.Windows.Forms.Label printsize_label;
+        private System.Windows.Forms.Label printcolor_label;
+        private System.Windows.Forms.Label printside__label;
+        private System.Windows.Forms.Label circulation_label;
     }
 }
 

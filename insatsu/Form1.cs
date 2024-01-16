@@ -17,17 +17,20 @@ namespace insatsu
         public int Print_cnt;   //印刷物の種類の数
         public Print[] Prints; //印刷物
         private int R = 5000;
+        public int Start_Time;  //1日の作業開始時間
+        public int End_Time;    //1日の作業終了時間
 
         private int machine_listInd;    //リスト内の印刷機のインデックス
         private int print_listInd;  //リスト内の印刷物のインデックス
 
         public struct Machine   //構造体で印刷機を表す
         {
-            int rpm;    //回転数
+            public int rpm;    //回転数
             public int color;  //色数
             public string size;    //サイズ
             public int size_a; //A4サイズを考えた時の数
             public int size_b; //B5サイズを考えた時の数
+            public string name; //印刷機の名前
 
             public void rpm_set(int R)  //回転数の設定
             { this.rpm = R; }
@@ -64,6 +67,8 @@ namespace insatsu
             public int size_a;
             public int size_b;
             public string side; //両面印刷/片面印刷
+            public bool assign; //割り当てが完了しているかどうか,完了していればtrue
+            public string name; //印刷物の名前
 
             public void size_div()  //サイズを最小サイズに分割
             {
@@ -189,6 +194,7 @@ namespace insatsu
             {
                 machine_listBox.Items.Add("印刷機" + cnt); //リストに追加
                 Machines[cnt - 1].rpm_set(R);   //回転数の設定
+                Machines[cnt - 1].name = "印刷機" + cnt.ToString();    //印刷機の名前設定
             }
 
         }
@@ -223,6 +229,7 @@ namespace insatsu
             for (cnt = 1; cnt <= Print_cnt; cnt++)
             {
                 print_listBox.Items.Add("印刷物" + cnt);
+                Prints[cnt - 1].name = "印刷物" + cnt.ToString();
             }
 
         }
@@ -231,40 +238,142 @@ namespace insatsu
         {
             Prints[print_listInd].size = printsize_comboBox.Text;
             Prints[print_listInd].size_div();
-            textBox2.Text += Prints[print_listInd].size_a.ToString();
-            textBox2.Text += Prints[print_listInd].size_b.ToString();
         }
 
         private void printcolor_comboBox_SelectionChangeCommitted(object sender, EventArgs e)   //印刷物が何色刷りか取得
         {
             Prints[print_listInd].color = int.Parse(printcolor_comboBox.Text);
-            textBox2.Text += Prints[print_listInd].color.ToString();
         }
 
         private void printside_comboBox_SelectedIndexChanged(object sender, EventArgs e)    //両面印刷/片面印刷どちらか取得
         {
             Prints[print_listInd].side = printside_comboBox.Text;
-
-            textBox2.Text += Prints[print_listInd].side.ToString();
         }
 
         private void circulation_textBox_KeyPress(object sender, KeyPressEventArgs e)   //部数取得
         {
             if (e.KeyChar == (char)Keys.Enter)  //エンターキーが押されたとき
             {
-                Prints[print_listInd].circulation = int.Parse(circulation_textBox.Text);  //入力値を整数型に変換後,代入
-
-                //テキストボックスに現在値の表示
-                //circulation_textBox.Text = Prints[print_listInd].circulation.ToString();
+                if (!String.IsNullOrEmpty(circulation_textBox.Text))    //入力値が空でなければ
+                {
+                    Prints[print_listInd].circulation = int.Parse(circulation_textBox.Text);  //入力値を整数型に変換後,代入
+                }
 
                 e.Handled = true;   //ビープ音だけは鳴らないようにしたい
-
-                textBox2.Text += Prints[print_listInd].circulation.ToString();
             }
 
             if ((e.KeyChar < '0' || e.KeyChar > '9') && e.KeyChar != '\b')
             {
                 e.Handled = true;   //数字以外の時イベントキャンセル
+            }
+        }
+
+        private void start_button_Click(object sender, EventArgs e)
+        {
+            int cnt;
+            int no_Input = 0;   //入力値がない要素の数
+
+            /*入力値が足りないときのエラー処理*/
+            for (cnt = 0; cnt < Prints.Count(); cnt++)  //印刷物
+            {
+                if (Prints[cnt].size == null)
+                {
+                    textBox1.Text += Prints[cnt].name + "のサイズを入力してください\r\n";
+                    no_Input++;
+                }
+                if (Prints[cnt].circulation == 0)
+                {
+                    textBox1.Text += Prints[cnt].name + "の部数を入力してください\r\n";
+                    no_Input++;
+                }
+                if (Prints[cnt].color == 0)
+                {
+                    textBox1.Text += Prints[cnt].name + "の色を入力してください\r\n";
+                    no_Input++;
+                }
+                if (Prints[cnt].side == null)
+                {
+                    textBox1.Text += Prints[cnt].name + "の両面印刷/片面印刷を選択して下さい\r\n";
+                    no_Input++;
+                }
+                /*if (Prints[cnt].deadline == 0) { 
+                    textBox1.Text = Prints[cnt].name + "の納期を入力してください";
+                    no_Input++;
+                }*/
+            }
+            for (cnt = 0; cnt < Machines.Count(); cnt++)
+            {   //印刷機
+                if (Machines[cnt].size == null)
+                {
+                    textBox1.Text += Machines[cnt].name + "のサイズを入力してください\r\n";
+                    no_Input++;
+                }
+                if (Machines[cnt].color == 0)
+                {
+                    textBox1.Text += Machines[cnt].name + "の色を入力してください\r\n";
+                    no_Input++;
+                }
+            }
+
+            if (no_Input <= 0)  //未入力値がない場合,Planをスタート
+            {
+                Plan1_Start();
+            }
+        }
+
+        private void Plan1_Start()
+        {
+            int cnt;
+
+            //Plan1テスト
+            Plan1.Input_Print[] input_print = new Plan1.Input_Print[Print_cnt];
+            for (cnt = 0; cnt < Prints.Count(); cnt++)
+            {
+                input_print[cnt].size_a = Prints[cnt].size_a;
+                input_print[cnt].deadline = Prints[cnt].deadline;   //納期
+                input_print[cnt].circulation = Prints[cnt].circulation;    //部数
+                input_print[cnt].color = Prints[cnt].color;  //色数
+                input_print[cnt].size = Prints[cnt].size;    //サイズ  
+                input_print[cnt].size_a = Prints[cnt].size_a;
+                input_print[cnt].size_b = Prints[cnt].size_b;
+                input_print[cnt].side = Prints[cnt].side; //両面印刷/片面印刷
+                input_print[cnt].assign = false; //割り当てが完了しているかどうか,完了していればtrue
+                input_print[cnt].name = Prints[cnt].name; //印刷物の名前
+            }
+            Plan1.Input_Machine[] input_machine = new Plan1.Input_Machine[Machine_cnt];
+            for (cnt = 0; cnt < Machines.Count(); cnt++)
+            {
+                input_machine[cnt].rpm = Machines[cnt].rpm;    //回転数
+                input_machine[cnt].color = Machines[cnt].color;  //色数
+                input_machine[cnt].size = Machines[cnt].size;    //サイズ
+                input_machine[cnt].size_a = Machines[cnt].size_a; //A4サイズを考えた時の数
+                input_machine[cnt].size_b = Machines[cnt].size_b; //B5サイズを考えた時の数
+                input_machine[cnt].name = Machines[cnt].name;
+            }
+
+            Plan1 plan1 = new Plan1(input_machine, input_print);
+
+            /*以下テスト用*/
+            plan1.Planning();
+
+            textBox2.Text = "テスト開始";
+            for (int i = 0; i < plan1.test_oomachine.Count(); i++)
+            {
+                for (int j = 0; j < plan1.test_oomachine[i].Count(); j++)
+                {
+                    for (int k = 0; k < plan1.test_oomachine[i][j].Count(); k++)
+                    {
+                        textBox2.Text += i.ToString() + j.ToString() + k.ToString() + plan1.test_oomachine[i][j][k] + ",";
+                    }
+                    textBox2.Text += " jj ";
+                }
+                textBox2.Text += " ii \r\n";
+            }
+
+            textBox2.Text += "\r\n";
+            foreach (var s in plan1.prints)
+            {
+                textBox2.Text += s.name + ",";
             }
         }
     }
