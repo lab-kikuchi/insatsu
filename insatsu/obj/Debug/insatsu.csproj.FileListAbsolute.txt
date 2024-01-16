@@ -8,3 +8,14 @@ E:\卒研\insatsu\insatsu\obj\Debug\insatsu.csproj.GenerateResource.cache
 E:\卒研\insatsu\insatsu\obj\Debug\insatsu.csproj.CoreCompileInputs.cache
 E:\卒研\insatsu\insatsu\obj\Debug\insatsu.exe
 E:\卒研\insatsu\insatsu\obj\Debug\insatsu.pdb
+C:\Users\luluc\insatsu\insatsu\bin\Debug\insatsu.exe.config
+C:\Users\luluc\insatsu\insatsu\bin\Debug\insatsu.exe
+C:\Users\luluc\insatsu\insatsu\bin\Debug\insatsu.pdb
+C:\Users\luluc\insatsu\insatsu\obj\Debug\insatsu.csproj.AssemblyReference.cache
+C:\Users\luluc\insatsu\insatsu\obj\Debug\insatsu.Form1.resources
+C:\Users\luluc\insatsu\insatsu\obj\Debug\insatsu.Form2.resources
+C:\Users\luluc\insatsu\insatsu\obj\Debug\insatsu.Properties.Resources.resources
+C:\Users\luluc\insatsu\insatsu\obj\Debug\insatsu.csproj.GenerateResource.cache
+C:\Users\luluc\insatsu\insatsu\obj\Debug\insatsu.csproj.CoreCompileInputs.cache
+C:\Users\luluc\insatsu\insatsu\obj\Debug\insatsu.exe
+C:\Users\luluc\insatsu\insatsu\obj\Debug\insatsu.pdb
