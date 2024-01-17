@@ -17,8 +17,8 @@ namespace insatsu
         public int Print_cnt;   //印刷物の種類の数
         public Print[] Prints; //印刷物
         private int R = 5000;
-        public int Start_Time;  //1日の作業開始時間
-        public int End_Time;    //1日の作業終了時間
+        public int beginTime;  //1日の作業開始時間
+        public int endTime;    //1日の作業終了時間
 
         private int machine_listInd;    //リスト内の印刷機のインデックス
         private int print_listInd;  //リスト内の印刷物のインデックス
@@ -89,6 +89,10 @@ namespace insatsu
         public Form1()
         {
             InitializeComponent();
+
+            begintime_numericUpDown.Value = 9;  //開始時間の初期設定
+            endtime_numericUpDown.Value = 21;   //終了時間の初期設定
+
             List<Print2> prints1 = new List<Print2>();
             List<Print2> prints2 = new List<Print2>();
 
@@ -163,22 +167,17 @@ namespace insatsu
             //印刷機の要素を入力可能にする
             machinesize_comboBox.Enabled = true;
             machinecolor_comboBox.Enabled = true;
-
-            textBox1.Text = machine_listInd.ToString();
         }
 
         private void machinesize_comboBox_SelectionChangeCommitted(object sender, EventArgs e)  //印刷機のサイズの取得
         {
             Machines[machine_listInd].size = machinesize_comboBox.Text;
             Machines[machine_listInd].size_div();
-            textBox1.Text += Machines[machine_listInd].size_a.ToString();   //テスト用
-            textBox1.Text += Machines[machine_listInd].size_b.ToString();
         }
 
         private void machinecolor_comboBox_SelectionChangeCommitted(object sender, EventArgs e) //何色機か取得
         {
             Machines[machine_listInd].color = int.Parse(machinecolor_comboBox.Text);
-            textBox1.Text += Machines[machine_listInd].color.ToString();
         }
 
 
@@ -214,8 +213,6 @@ namespace insatsu
             printsize_comboBox.Enabled = true;
             printside_comboBox.Enabled = true;
             printcolor_comboBox.Enabled = true;
-
-            textBox2.Text = print_listInd.ToString();
         }
 
         private void printcount_button_Click(object sender, EventArgs e)    //印刷物のリスト表示
@@ -317,6 +314,8 @@ namespace insatsu
 
             if (no_Input <= 0)  //未入力値がない場合,Planをスタート
             {
+                beginTime = decimal.ToInt32(begintime_numericUpDown.Value);
+                endTime = decimal.ToInt32(endtime_numericUpDown.Value);
                 Plan1_Start();
             }
         }
@@ -353,10 +352,12 @@ namespace insatsu
 
             Plan1 plan1 = new Plan1(input_machine, input_print);
 
-            /*以下テスト用*/
             plan1.Planning();
+            Form form2 = new Form2(beginTime, endTime, 1, plan1.outmachines);
+            form2.Show();
 
-            textBox2.Text = "テスト開始";
+            /*以下テスト用*/
+            /*textBox2.Text = "テスト開始";
             for (int i = 0; i < plan1.test_oomachine.Count(); i++)
             {
                 for (int j = 0; j < plan1.test_oomachine[i].Count(); j++)
@@ -374,7 +375,8 @@ namespace insatsu
             foreach (var s in plan1.prints)
             {
                 textBox2.Text += s.name + ",";
-            }
+            }*/
+
         }
     }
 }

@@ -51,8 +51,12 @@
             this.printcolor_label = new System.Windows.Forms.Label();
             this.printside__label = new System.Windows.Forms.Label();
             this.circulation_label = new System.Windows.Forms.Label();
+            this.begintime_numericUpDown = new System.Windows.Forms.NumericUpDown();
+            this.endtime_numericUpDown = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.machinecount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.printcount)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.begintime_numericUpDown)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.endtime_numericUpDown)).BeginInit();
             this.SuspendLayout();
             // 
             // textBox1
@@ -298,11 +302,37 @@
             this.circulation_label.TabIndex = 22;
             this.circulation_label.Text = "部数";
             // 
+            // begintime_numericUpDown
+            // 
+            this.begintime_numericUpDown.Location = new System.Drawing.Point(52, 307);
+            this.begintime_numericUpDown.Maximum = new decimal(new int[] {
+            23,
+            0,
+            0,
+            0});
+            this.begintime_numericUpDown.Name = "begintime_numericUpDown";
+            this.begintime_numericUpDown.Size = new System.Drawing.Size(50, 19);
+            this.begintime_numericUpDown.TabIndex = 23;
+            // 
+            // endtime_numericUpDown
+            // 
+            this.endtime_numericUpDown.Location = new System.Drawing.Point(147, 307);
+            this.endtime_numericUpDown.Maximum = new decimal(new int[] {
+            23,
+            0,
+            0,
+            0});
+            this.endtime_numericUpDown.Name = "endtime_numericUpDown";
+            this.endtime_numericUpDown.Size = new System.Drawing.Size(50, 19);
+            this.endtime_numericUpDown.TabIndex = 24;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(782, 720);
+            this.Controls.Add(this.endtime_numericUpDown);
+            this.Controls.Add(this.begintime_numericUpDown);
             this.Controls.Add(this.circulation_label);
             this.Controls.Add(this.printside__label);
             this.Controls.Add(this.printcolor_label);
@@ -331,6 +361,8 @@
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.machinecount)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.printcount)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.begintime_numericUpDown)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.endtime_numericUpDown)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -361,6 +393,8 @@
         private System.Windows.Forms.Label printcolor_label;
         private System.Windows.Forms.Label printside__label;
         private System.Windows.Forms.Label circulation_label;
+        private System.Windows.Forms.NumericUpDown begintime_numericUpDown;
+        private System.Windows.Forms.NumericUpDown endtime_numericUpDown;
     }
 }
 

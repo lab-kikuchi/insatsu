@@ -16,9 +16,9 @@ namespace insatsu
         public Input_Print[] prints; //印刷物
         private int R = 5000;
 
-        public List<Machine> outmachines;   //出力用の印刷機リスト
+        public List<Machine2> outmachines;   //出力用の印刷機リスト
         public Print_Type outtype;
-        public Print outprint;  //出力する印刷物
+        public List<Print2> outprint;  //出力する印刷物
 
         //テスト用
         public List<List<List<string>>> test_oomachine = new List<List<List<string>>>();
@@ -97,17 +97,18 @@ namespace insatsu
 
         public void Make_OutMachine()  //出力用の印刷機リストを作成
         {
-            //public List<Machine> outmachines;
-            /*for(int cnt = 0; cnt < machines.Count(); cnt++)
+            outmachines = new List<Machine2>();
+            for (int cnt = 0; cnt < machines.Count(); cnt++)
             {
                 if (machines[cnt].size_a != 0)
                 {
-                    outmachines.Add(new Machine(Print_Type.A, machines[cnt].size_a, "印刷機" + cnt.ToString()));
-                }else if(machines[cnt].size_b != 0)
-                {
-                    outmachines.Add(new Machine(Print_Type.B, machines[cnt].size_b, "印刷機" + cnt.ToString()));
+                    outmachines.Add(new Machine2(Print_Type.A, machines[cnt].size_a, machines[cnt].name));
                 }
-            }*/
+                else if (machines[cnt].size_b != 0)
+                {
+                    outmachines.Add(new Machine2(Print_Type.B, machines[cnt].size_b, "印刷機" + cnt.ToString()));
+                }
+            }
 
             //テスト用印刷機のリスト
             for (int cnt = 0; cnt < machines.Count(); cnt++)
@@ -157,9 +158,6 @@ namespace insatsu
                 for (cnt = 0; cnt < machines.Count(); cnt++)
                 {
                     p_index = -1;
-                    //サイズ・色数が完全に一致するものを探す
-                    //var p = Prints.Select().Where(c => c.color == m_color).Where(sa => sa == m_size_a).Where(sb => m_size_b).Take(1);
-                    //var p=Prints.FindIndex((s,c)=>s.size==m_size_b&&c==m_color);
                     var p1 = Array.FindIndex(prints, s => s.size_a == machines[cnt].size_a && s.size_b == machines[cnt].size_b && s.color == machines[cnt].color && s.assign == false);
 
                     if (p1 > -1)  //p1(一致するもの)が存在するならインデックスを,見つからなかったときは-1を返す
@@ -311,6 +309,11 @@ namespace insatsu
                 {
                     while (circulation_cnt > 0)
                     {
+                        /*割り当て対象印刷物を割り当てる*/
+                        outprint = new List<Print2>();
+                        outprint.Add(new Print2(prints[print_ind].name, prints[print_ind].circulation));
+                        outmachines[machine_ind].Set_Plan(outprint);
+
                         //テスト用
                         test_oprint = new List<string>();
                         test_oprint.Add(prints[print_ind].name);
@@ -371,12 +374,13 @@ namespace insatsu
 
             while (assignprints.Count() > 0)    //割り当て対象印刷物があれば
             {
-                /*割り当て対象印刷物を割り当てる
-                 * for(cnt=0;cnt<assignprints.Count();cnt++){
-                 *  outprint = new Print(assignprints[cnt].name, assignprints[cnt].circulation);
-                 *  //Print型のリストにAddする
-                 * }
-                outmachines[machine_ind].Set_Plan(Print型のリスト);*/
+                /*割り当て対象印刷物を割り当てる*/
+                outprint = new List<Print2>();
+                for (cnt = 0; cnt < assignprints.Count(); cnt++)
+                {
+                    outprint.Add(new Print2(assignprints[cnt].name, assignprints[cnt].circulation));
+                }
+                outmachines[machine_ind].Set_Plan(outprint);
 
                 //テスト用
                 test_oprint = new List<string>();   //新しくインスタンス作成
@@ -384,7 +388,6 @@ namespace insatsu
                 {
                     test_oprint.Add(assignprints[cnt].name);
                 }
-                //test_schedule.Add(test_oprint);
                 test_oomachine[machine_ind].Add(test_oprint);   //印刷機[machine_ind]に対象の印刷物を割り当て
 
                 remove_ind = new List<int>();   //削除対象の印刷物のインデックス
