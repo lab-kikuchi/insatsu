@@ -20,8 +20,8 @@ namespace insatsu
         public int beginTime;  //1日の作業開始時間
         public int endTime;    //1日の作業終了時間
 
-        private int machine_listInd;    //リスト内の印刷機のインデックス
-        private int print_listInd;  //リスト内の印刷物のインデックス
+        private int machine_listInd = -1;    //リスト内の印刷機のインデックス
+        private int print_listInd = -1;  //リスト内の印刷物のインデックス
 
         public struct Machine   //構造体で印刷機を表す
         {
@@ -63,6 +63,7 @@ namespace insatsu
             public int deadline;   //納期
             public int circulation;    //部数
             public int color;  //色数
+            public int backcolor;   //裏面の色数
             public string size;    //サイズ
             public int size_a;
             public int size_b;
@@ -134,6 +135,7 @@ namespace insatsu
             printsize_comboBox.Enabled = false;
             printside_comboBox.Enabled = false;
             printcolor_comboBox.Enabled = false;
+            printbackcolor_comboBox.Enabled = false;
 
         }
 
@@ -188,8 +190,8 @@ namespace insatsu
             Machines = new Machine[Machine_cnt];
 
             machine_listBox.Items.Clear();  //リスト消去
-            int cnt;
-            for (cnt = 1; cnt <= Machine_cnt; cnt++)    
+            machine_listInd = -1;
+            for (int cnt = 1; cnt <= Machine_cnt; cnt++)    
             {
                 machine_listBox.Items.Add("印刷機" + cnt); //リストに追加
                 Machines[cnt - 1].rpm_set(R);   //回転数の設定
@@ -207,12 +209,15 @@ namespace insatsu
             printsize_comboBox.Text = Prints[print_listInd].size;
             printside_comboBox.Text = Prints[print_listInd].side;
             printcolor_comboBox.Text = Prints[print_listInd].color.ToString();
+            printbackcolor_comboBox.Text = Prints[print_listInd].backcolor.ToString();
 
             //印刷物の要素を入力可能にする
             circulation_textBox.ReadOnly = false;
             printsize_comboBox.Enabled = true;
             printside_comboBox.Enabled = true;
             printcolor_comboBox.Enabled = true;
+            if (Prints[print_listInd].side == "両面印刷") { printbackcolor_comboBox.Enabled = true; }
+            else if (Prints[print_listInd].side == "片面印刷") { printbackcolor_comboBox.Enabled = false; }
         }
 
         private void printcount_button_Click(object sender, EventArgs e)    //印刷物のリスト表示
@@ -222,8 +227,8 @@ namespace insatsu
             Prints = new Print[Print_cnt];
 
             print_listBox.Items.Clear();    //リスト消去
-            int cnt;
-            for (cnt = 1; cnt <= Print_cnt; cnt++)
+            print_listInd = -1;
+            for (int cnt = 1; cnt <= Print_cnt; cnt++)
             {
                 print_listBox.Items.Add("印刷物" + cnt);
                 Prints[cnt - 1].name = "印刷物" + cnt.ToString();
@@ -241,10 +246,15 @@ namespace insatsu
         {
             Prints[print_listInd].color = int.Parse(printcolor_comboBox.Text);
         }
-
+        private void printbackcolor_comboBox_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            Prints[print_listInd].backcolor = int.Parse(printbackcolor_comboBox.Text);
+        }
         private void printside_comboBox_SelectedIndexChanged(object sender, EventArgs e)    //両面印刷/片面印刷どちらか取得
         {
             Prints[print_listInd].side = printside_comboBox.Text;
+            if (Prints[print_listInd].side == "両面印刷") { printbackcolor_comboBox.Enabled = true; }
+            else if (Prints[print_listInd].side == "片面印刷") { printbackcolor_comboBox.Enabled = false; }
         }
 
         private void circulation_textBox_KeyPress(object sender, KeyPressEventArgs e)   //部数取得
@@ -271,51 +281,80 @@ namespace insatsu
             int no_Input = 0;   //入力値がない要素の数
 
             /*入力値が足りないときのエラー処理*/
-            for (cnt = 0; cnt < Prints.Count(); cnt++)  //印刷物
+            if (machine_listInd == -1)
             {
-                if (Prints[cnt].size == null)
-                {
-                    textBox1.Text += Prints[cnt].name + "のサイズを入力してください\r\n";
-                    no_Input++;
-                }
-                if (Prints[cnt].circulation == 0)
-                {
-                    textBox1.Text += Prints[cnt].name + "の部数を入力してください\r\n";
-                    no_Input++;
-                }
-                if (Prints[cnt].color == 0)
-                {
-                    textBox1.Text += Prints[cnt].name + "の色を入力してください\r\n";
-                    no_Input++;
-                }
-                if (Prints[cnt].side == null)
-                {
-                    textBox1.Text += Prints[cnt].name + "の両面印刷/片面印刷を選択して下さい\r\n";
-                    no_Input++;
-                }
-                /*if (Prints[cnt].deadline == 0) { 
-                    textBox1.Text = Prints[cnt].name + "の納期を入力してください";
-                    no_Input++;
-                }*/
+                textBox1.Text += "印刷機がありません\r\n";
+                no_Input++;
             }
-            for (cnt = 0; cnt < Machines.Count(); cnt++)
-            {   //印刷機
-                if (Machines[cnt].size == null)
-                {
-                    textBox1.Text += Machines[cnt].name + "のサイズを入力してください\r\n";
-                    no_Input++;
+            else
+            {
+                for (cnt = 0; cnt < Machines.Count(); cnt++)
+                {   //印刷機
+                    if (Machines[cnt].size == null)
+                    {
+                        textBox1.Text += Machines[cnt].name + "のサイズを入力してください\r\n";
+                        no_Input++;
+                    }
+                    if (Machines[cnt].color == 0)
+                    {
+                        textBox1.Text += Machines[cnt].name + "の色を入力してください\r\n";
+                        no_Input++;
+                    }
                 }
-                if (Machines[cnt].color == 0)
+            }
+
+            if (print_listInd == -1)
+            {
+                textBox1.Text += "印刷物がありません\r\n";
+                no_Input++;
+            }
+            else
+            {
+                for (cnt = 0; cnt < Prints.Count(); cnt++)  //印刷物
                 {
-                    textBox1.Text += Machines[cnt].name + "の色を入力してください\r\n";
-                    no_Input++;
+                    if (Prints[cnt].size == null)
+                    {
+                        textBox1.Text += Prints[cnt].name + "のサイズを入力してください\r\n";
+                        no_Input++;
+                    }
+                    if (Prints[cnt].circulation == 0)
+                    {
+                        textBox1.Text += Prints[cnt].name + "の部数を入力してください\r\n";
+                        no_Input++;
+                    }
+                    if (Prints[cnt].color == 0)
+                    {
+                        textBox1.Text += Prints[cnt].name + "の色を入力してください\r\n";
+                        no_Input++;
+                    }
+                    if (Prints[cnt].side == null)
+                    {
+                        textBox1.Text += Prints[cnt].name + "の両面印刷/片面印刷を選択して下さい\r\n";
+                        no_Input++;
+                    }
+                    else if (Prints[cnt].side == "両面印刷" && Prints[cnt].backcolor == 0)
+                    {
+                        textBox1.Text += Prints[cnt].name + "の裏面の色を選択して下さい\r\n";
+                        no_Input++;
+                    }
+                    /*if (Prints[cnt].deadline == 0) { 
+                        textBox1.Text = Prints[cnt].name + "の納期を入力してください";
+                        no_Input++;
+                    }*/
                 }
+            }
+
+            /*開始・終了時間の取得*/
+            beginTime = decimal.ToInt32(begintime_numericUpDown.Value);
+            endTime = decimal.ToInt32(endtime_numericUpDown.Value);
+            if (endTime - beginTime <= 0)   //エラー
+            {
+                textBox1.Text += "終了時間は開始時間より遅く設定してください\r\n";
+                no_Input++;
             }
 
             if (no_Input <= 0)  //未入力値がない場合,Planをスタート
             {
-                beginTime = decimal.ToInt32(begintime_numericUpDown.Value);
-                endTime = decimal.ToInt32(endtime_numericUpDown.Value);
                 Plan1_Start();
             }
         }
@@ -332,6 +371,7 @@ namespace insatsu
                 input_print[cnt].deadline = Prints[cnt].deadline;   //納期
                 input_print[cnt].circulation = Prints[cnt].circulation;    //部数
                 input_print[cnt].color = Prints[cnt].color;  //色数
+                input_print[cnt].backcolor = Prints[cnt].backcolor;
                 input_print[cnt].size = Prints[cnt].size;    //サイズ  
                 input_print[cnt].size_a = Prints[cnt].size_a;
                 input_print[cnt].size_b = Prints[cnt].size_b;
@@ -377,6 +417,6 @@ namespace insatsu
                 textBox2.Text += s.name + ",";
             }*/
 
-        }
+        } 
     }
 }

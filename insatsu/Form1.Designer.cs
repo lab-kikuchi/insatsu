@@ -53,6 +53,7 @@
             this.circulation_label = new System.Windows.Forms.Label();
             this.begintime_numericUpDown = new System.Windows.Forms.NumericUpDown();
             this.endtime_numericUpDown = new System.Windows.Forms.NumericUpDown();
+            this.printbackcolor_comboBox = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.machinecount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.printcount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.begintime_numericUpDown)).BeginInit();
@@ -326,11 +327,27 @@
             this.endtime_numericUpDown.Size = new System.Drawing.Size(50, 19);
             this.endtime_numericUpDown.TabIndex = 24;
             // 
+            // printbackcolor_comboBox
+            // 
+            this.printbackcolor_comboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.printbackcolor_comboBox.FormattingEnabled = true;
+            this.printbackcolor_comboBox.Items.AddRange(new object[] {
+            "1",
+            "2",
+            "3",
+            "4"});
+            this.printbackcolor_comboBox.Location = new System.Drawing.Point(568, 231);
+            this.printbackcolor_comboBox.Name = "printbackcolor_comboBox";
+            this.printbackcolor_comboBox.Size = new System.Drawing.Size(121, 20);
+            this.printbackcolor_comboBox.TabIndex = 25;
+            this.printbackcolor_comboBox.SelectionChangeCommitted += new System.EventHandler(this.printbackcolor_comboBox_SelectionChangeCommitted);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(782, 720);
+            this.Controls.Add(this.printbackcolor_comboBox);
             this.Controls.Add(this.endtime_numericUpDown);
             this.Controls.Add(this.begintime_numericUpDown);
             this.Controls.Add(this.circulation_label);
@@ -395,6 +412,7 @@
         private System.Windows.Forms.Label circulation_label;
         private System.Windows.Forms.NumericUpDown begintime_numericUpDown;
         private System.Windows.Forms.NumericUpDown endtime_numericUpDown;
+        private System.Windows.Forms.ComboBox printbackcolor_comboBox;
     }
 }
 

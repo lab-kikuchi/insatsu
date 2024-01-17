@@ -65,6 +65,7 @@ namespace insatsu
             public int deadline;   //納期
             public int circulation;    //部数
             public int color;  //色数
+            public int backcolor;   //裏面の色数
             public string size;    //サイズ
             public int size_a;
             public int size_b;
@@ -272,8 +273,6 @@ namespace insatsu
                             }
 
                         }
-
-
                         Assign_Print2(cnt, assign_printList);   //割り当てメソッドへ
                         assign_printList.Clear();   //割り当て印刷物用のリスト解放
                         continue;
@@ -291,6 +290,7 @@ namespace insatsu
             int color_cnt = (int)Math.Ceiling((double)prints[print_ind].color / (double)machines[machine_ind].color);
             int circulation_cnt = (int)Math.Ceiling((double)prints[print_ind].circulation / (double)machines[machine_ind].rpm);
             int side_cnt = 0;
+            int outmachine_ind = outmachines.FindIndex(n => n.name == machines[machine_ind].name);  //名前から出力用印刷機リストのインデックスを逆引き
 
             int schedule_ind;
 
@@ -312,36 +312,36 @@ namespace insatsu
                         /*割り当て対象印刷物を割り当てる*/
                         outprint = new List<Print2>();
                         outprint.Add(new Print2(prints[print_ind].name, prints[print_ind].circulation));
-                        outmachines[machine_ind].Set_Plan(outprint);
+                        outmachines[outmachine_ind].Set_Plan(outprint);
 
                         //テスト用
                         test_oprint = new List<string>();
                         test_oprint.Add(prints[print_ind].name);
-                        test_oomachine[machine_ind].Add(test_oprint);
+                        test_oomachine[outmachine_ind].Add(test_oprint);
 
                         circulation_cnt--;
                     }
                     color_cnt--;
                     circulation_cnt = (int)Math.Ceiling((double)prints[print_ind].circulation / (double)machines[machine_ind].rpm);
-                    schedule_ind = test_oomachine[machine_ind].Count() - 1;
-                    if (!test_oomachine[machine_ind][schedule_ind].Contains("準備時間"))
+                    schedule_ind = test_oomachine[outmachine_ind].Count() - 1;
+                    if (!test_oomachine[outmachine_ind][schedule_ind].Contains("準備時間"))
                     {
                         /*準備時間未設定なら準備時間を入れる*/
-                    test_oprint = new List<string>();
-                    test_oprint.Add("準備時間");
-                    test_oomachine[machine_ind].Add(test_oprint);
+                        test_oprint = new List<string>();
+                        test_oprint.Add("準備時間");
+                        test_oomachine[outmachine_ind].Add(test_oprint);
                     }
                 }
                 side_cnt--;
-                color_cnt = (int)Math.Ceiling((double)prints[print_ind].color / (double)machines[machine_ind].color);
+                color_cnt = (int)Math.Ceiling((double)prints[print_ind].backcolor / (double)machines[machine_ind].color);
                 circulation_cnt = (int)Math.Ceiling((double)prints[print_ind].circulation / (double)machines[machine_ind].rpm);
-                schedule_ind = test_oomachine[machine_ind].Count() - 1;
-                if (!test_oomachine[machine_ind][schedule_ind].Contains("準備時間"))
+                schedule_ind = test_oomachine[outmachine_ind].Count() - 1;
+                if (!test_oomachine[outmachine_ind][schedule_ind].Contains("準備時間"))
                 {
 
                     test_oprint = new List<string>();
                     test_oprint.Add("準備時間");
-                    test_oomachine[machine_ind].Add(test_oprint);
+                    test_oomachine[outmachine_ind].Add(test_oprint);
                 }
             }
         }
@@ -355,6 +355,7 @@ namespace insatsu
             List<int> remove_ind; //削除対象のインデックス確保用リスト
             int cnt;
             int assignprint_cnt;
+            int outmachine_ind = outmachines.FindIndex(n => n.name == machines[machine_ind].name);  //名前から出力用印刷機リストのインデックスを逆引き
 
             int schedule_ind;
 
@@ -380,7 +381,7 @@ namespace insatsu
                 {
                     outprint.Add(new Print2(assignprints[cnt].name, assignprints[cnt].circulation));
                 }
-                outmachines[machine_ind].Set_Plan(outprint);
+                outmachines[outmachine_ind].Set_Plan(outprint);
 
                 //テスト用
                 test_oprint = new List<string>();   //新しくインスタンス作成
@@ -388,7 +389,7 @@ namespace insatsu
                 {
                     test_oprint.Add(assignprints[cnt].name);
                 }
-                test_oomachine[machine_ind].Add(test_oprint);   //印刷機[machine_ind]に対象の印刷物を割り当て
+                test_oomachine[outmachine_ind].Add(test_oprint);   //印刷機[machine_ind]に対象の印刷物を割り当て
 
                 remove_ind = new List<int>();   //削除対象の印刷物のインデックス
                 assignprint_cnt = assignprints.Count();
@@ -404,37 +405,37 @@ namespace insatsu
                                 /*削除対象のインデックスを確保*/
                                 remove_ind.Add(cnt);
                                 /*準備時間未設定なら準備時間を入れる*/
-                                schedule_ind = test_oomachine[machine_ind].Count() - 1;
-                                if (!test_oomachine[machine_ind][schedule_ind].Contains("準備時間"))
+                                schedule_ind = test_oomachine[outmachine_ind].Count() - 1;
+                                if (!test_oomachine[outmachine_ind][schedule_ind].Contains("準備時間"))
                                 {
                                     test_oprint = new List<string>();
                                     test_oprint.Add("準備時間");
-                                    test_oomachine[machine_ind].Add(test_oprint);
+                                    test_oomachine[outmachine_ind].Add(test_oprint);
                                 }
                                 continue;
                             }
                             else
                             {
                                 side_cnt[cnt]--;
-                                color_cnt[cnt] = (int)Math.Ceiling((double)assignprints[cnt].color / (double)machines[machine_ind].color) - 1;
-                                schedule_ind = test_oomachine[machine_ind].Count() - 1;
-                                if (!test_oomachine[machine_ind][schedule_ind].Contains("準備時間"))
+                                color_cnt[cnt] = (int)Math.Ceiling((double)assignprints[cnt].backcolor / (double)machines[machine_ind].color) - 1;
+                                schedule_ind = test_oomachine[outmachine_ind].Count() - 1;
+                                if (!test_oomachine[outmachine_ind][schedule_ind].Contains("準備時間"))
                                 {
                                     test_oprint = new List<string>();
                                     test_oprint.Add("準備時間");
-                                    test_oomachine[machine_ind].Add(test_oprint);
+                                    test_oomachine[outmachine_ind].Add(test_oprint);
                                 }
                             }
                         }
                         else
                         {
                             color_cnt[cnt]--;
-                            schedule_ind = test_oomachine[machine_ind].Count() - 1;
-                            if (!test_oomachine[machine_ind][schedule_ind].Contains("準備時間"))
+                            schedule_ind = test_oomachine[outmachine_ind].Count() - 1;
+                            if (!test_oomachine[outmachine_ind][schedule_ind].Contains("準備時間"))
                             {
                                 test_oprint = new List<string>();
                                 test_oprint.Add("準備時間");
-                                test_oomachine[machine_ind].Add(test_oprint);
+                                test_oomachine[outmachine_ind].Add(test_oprint);
                             }
                         }
                         circulation_cnt[cnt] = (int)Math.Ceiling((double)assignprints[cnt].circulation / (double)machines[machine_ind].rpm);  //部数カウント再設定
