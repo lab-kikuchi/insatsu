@@ -392,7 +392,9 @@ namespace insatsu
 
             Plan1 plan1 = new Plan1(input_machine, input_print);
 
+
             plan1.Planning();
+
             Form form2 = new Form2(beginTime, endTime, 1, plan1.outmachines);
             form2.Show();
 

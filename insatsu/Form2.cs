@@ -53,7 +53,6 @@ namespace insatsu
             for (int i = 0; i < machines.Count; i++)
             {
                 var machine = machines[i];
-                Console.WriteLine(machine.name);
 
                 for (int j = 0; j < machine.schedule.Count; j++, line_count++)
                 {
