@@ -59,7 +59,12 @@ namespace insatsu
 
                     for(int k = 0; k < machine.schedule.Count; k++)
                     {
-                        dataGridView1.Rows[index].Cells[k].Value = machine.schedule[k][j].name;
+
+                        if (machine.schedule[k].Count > j)
+                        {
+                            dataGridView1.Rows[index].Cells[k].Value = machine.schedule[k][j].name;
+
+                        }
 
                     }
                 }
