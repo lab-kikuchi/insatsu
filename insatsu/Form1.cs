@@ -90,40 +90,8 @@ namespace insatsu
         public Form1()
         {
             InitializeComponent();
-
-            begintime_numericUpDown.Value = 9;  //開始時間の初期設定
-            endtime_numericUpDown.Value = 21;   //終了時間の初期設定
-
-            List<Print2> prints1 = new List<Print2>();
-            List<Print2> prints2 = new List<Print2>();
-
-            for (int i = 0; i < 3; i++)
-            {
-                prints1.Add(new Print2($"印刷物{i}", (i + 1) * 1000));
-            }
-
-            for(int i = 0; i < 5; i++)
-            {
-                prints2.Add(new Print2($"印刷物{i}", (i + 1) * 1000));
-            }
-
-            Machine2 machine2 = new Machine2(Print_Type.A, 32, "印刷機A");
-            machine2.Set_Plan(prints2);
-            machine2.Set_Plan(prints1);
-            machine2.Set_Plan(prints2);
-
-            Machine2 machine3 = new Machine2(Print_Type.A, 32, "印刷機B");
-            machine3.Set_Plan(prints1);
-            machine3.Set_Plan(prints2);
-            machine3.Set_Plan(prints1);
-
-
-
-
-
-
-            Form form2 = new Form2(9, 18, 1, new List<Machine2> { machine2, machine3 });
-            form2.Show();
+            this.beginTime = 9;
+            this.endTime = 21;
         }
 
         private void Form1_Load(object sender, EventArgs e)

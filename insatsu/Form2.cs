@@ -49,22 +49,21 @@ namespace insatsu
 
             var line_count = 0;
 
-
             for (int i = 0; i < machines.Count; i++)
             {
                 var machine = machines[i];
-
-                for (int j = 0; j < machine.schedule.Count; j++, line_count++)
+                for (int j = 0; j < machine.schedule[0].Count; j++)
                 {
-                    var prints = machine.schedule[j];
-                    dataGridView1.Rows.Add();
-                    dataGridView1.Rows[line_count].HeaderCell.Value = machine.name;
+                    var index = dataGridView1.Rows.Add();
+                    dataGridView1.Rows[index].HeaderCell.Value = machine.name;
 
-                    for (int k = 0; k < prints.Count; k++)
+                    for(int k = 0; k < machine.schedule.Count; k++)
                     {
-                        dataGridView1.Rows[line_count].Cells[k].Value = prints[k].name;
+                        dataGridView1.Rows[index].Cells[k].Value = machine.schedule[k][j].name;
+
                     }
                 }
+
 
             }
 

@@ -311,11 +311,8 @@ namespace insatsu
                     {
                         /*割り当て対象印刷物を割り当てる*/
                         outprint = new List<Print2>();
-                 
-                        for (int i = 0; i < prints.Length; i++)
-                        {
-                            outprint.Add(new Print2(prints[i].name, prints[i].circulation));
-                        }
+
+                        outprint.Add(new Print2(prints[print_ind].name, prints[print_ind].circulation));
 
                         outmachines[outmachine_ind].Set_Plan(outprint);
 
