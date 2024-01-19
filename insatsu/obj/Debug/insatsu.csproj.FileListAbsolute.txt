@@ -30,3 +30,15 @@ C:\Users\Ejiri\source\repos\insatsu\insatsu\obj\Debug\insatsu.csproj.GenerateRes
 C:\Users\Ejiri\source\repos\insatsu\insatsu\obj\Debug\insatsu.csproj.CoreCompileInputs.cache
 C:\Users\Ejiri\source\repos\insatsu\insatsu\obj\Debug\insatsu.exe
 C:\Users\Ejiri\source\repos\insatsu\insatsu\obj\Debug\insatsu.pdb
+C:\Users\ezaki\Source\Repos\insatsu\insatsu\bin\Debug\insatsu.exe.config
+C:\Users\ezaki\Source\Repos\insatsu\insatsu\bin\Debug\insatsu.exe
+C:\Users\ezaki\Source\Repos\insatsu\insatsu\bin\Debug\insatsu.pdb
+C:\Users\ezaki\Source\Repos\insatsu\insatsu\obj\Debug\insatsu.csproj.AssemblyReference.cache
+C:\Users\ezaki\Source\Repos\insatsu\insatsu\obj\Debug\insatsu.csproj.SuggestedBindingRedirects.cache
+C:\Users\ezaki\Source\Repos\insatsu\insatsu\obj\Debug\insatsu.Form1.resources
+C:\Users\ezaki\Source\Repos\insatsu\insatsu\obj\Debug\insatsu.Form2.resources
+C:\Users\ezaki\Source\Repos\insatsu\insatsu\obj\Debug\insatsu.Properties.Resources.resources
+C:\Users\ezaki\Source\Repos\insatsu\insatsu\obj\Debug\insatsu.csproj.GenerateResource.cache
+C:\Users\ezaki\Source\Repos\insatsu\insatsu\obj\Debug\insatsu.csproj.CoreCompileInputs.cache
+C:\Users\ezaki\Source\Repos\insatsu\insatsu\obj\Debug\insatsu.exe
+C:\Users\ezaki\Source\Repos\insatsu\insatsu\obj\Debug\insatsu.pdb
