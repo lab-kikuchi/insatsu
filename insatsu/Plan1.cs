@@ -293,6 +293,7 @@ namespace insatsu
             int outmachine_ind = outmachines.FindIndex(n => n.name == machines[machine_ind].name);  //名前から出力用印刷機リストのインデックスを逆引き
 
             int schedule_ind;
+            List<Print2> prep_time;  //準備時間
 
             if (prints[print_ind].side == "両面印刷")
             {
@@ -328,10 +329,18 @@ namespace insatsu
                     schedule_ind = test_oomachine[outmachine_ind].Count() - 1;
                     if (!test_oomachine[outmachine_ind][schedule_ind].Contains("準備時間"))
                     {
-                        /*準備時間未設定なら準備時間を入れる*/
                         test_oprint = new List<string>();
                         test_oprint.Add("準備時間");
+                        //test_oprint.Add("裏面の版準備時間");
+                        //test_schedule.Add(test_oprint);
                         test_oomachine[outmachine_ind].Add(test_oprint);
+                    }
+                    /*準備時間が未設定なら設定する*/
+                    schedule_ind = outmachines[outmachine_ind].schedule.Count() - 1;
+                    prep_time = new List<Print2>();
+                    prep_time.Add(new Print2("準備時間", 0));
+                    if (!outmachines[outmachine_ind].schedule[schedule_ind].Contains(prep_time[0])){
+                        outmachines[outmachine_ind].Set_Plan(prep_time);
                     }
                 }
                 side_cnt--;
@@ -340,10 +349,18 @@ namespace insatsu
                 schedule_ind = test_oomachine[outmachine_ind].Count() - 1;
                 if (!test_oomachine[outmachine_ind][schedule_ind].Contains("準備時間"))
                 {
-
                     test_oprint = new List<string>();
                     test_oprint.Add("準備時間");
+                    //test_oprint.Add("裏面の版準備時間");
+                    //test_schedule.Add(test_oprint);
                     test_oomachine[outmachine_ind].Add(test_oprint);
+                }
+                /*準備時間が未設定なら設定する*/
+                schedule_ind = outmachines[outmachine_ind].schedule.Count() - 1;
+                prep_time = new List<Print2>();
+                prep_time.Add(new Print2("準備時間", 0));
+                if (!outmachines[outmachine_ind].schedule[schedule_ind].Contains(prep_time[0])){
+                    outmachines[outmachine_ind].Set_Plan(prep_time);
                 }
             }
         }
@@ -360,6 +377,7 @@ namespace insatsu
             int outmachine_ind = outmachines.FindIndex(n => n.name == machines[machine_ind].name);  //名前から出力用印刷機リストのインデックスを逆引き
 
             int schedule_ind;
+            List<Print2> prep_time;  //準備時間
 
             for (cnt = 0; cnt < assignprints.Count(); cnt++) //各カウント値の設定
             {
@@ -406,13 +424,22 @@ namespace insatsu
                             {
                                 /*削除対象のインデックスを確保*/
                                 remove_ind.Add(cnt);
-                                /*準備時間未設定なら準備時間を入れる*/
                                 schedule_ind = test_oomachine[outmachine_ind].Count() - 1;
                                 if (!test_oomachine[outmachine_ind][schedule_ind].Contains("準備時間"))
                                 {
                                     test_oprint = new List<string>();
                                     test_oprint.Add("準備時間");
+                                    //test_oprint.Add("裏面の版準備時間");
+                                    //test_schedule.Add(test_oprint);
                                     test_oomachine[outmachine_ind].Add(test_oprint);
+                                }
+                                /*準備時間が未設定なら設定する*/
+                                schedule_ind = outmachines[outmachine_ind].schedule.Count() - 1;
+                                prep_time = new List<Print2>();
+                                prep_time.Add(new Print2("準備時間", 0));
+                                if (!outmachines[outmachine_ind].schedule[schedule_ind].Contains(prep_time[0]))
+                                {
+                                    outmachines[outmachine_ind].Set_Plan(prep_time);
                                 }
                                 continue;
                             }
@@ -425,7 +452,17 @@ namespace insatsu
                                 {
                                     test_oprint = new List<string>();
                                     test_oprint.Add("準備時間");
+                                    //test_oprint.Add("裏面の版準備時間");
+                                    //test_schedule.Add(test_oprint);
                                     test_oomachine[outmachine_ind].Add(test_oprint);
+                                }
+                                /*準備時間が未設定なら設定する*/
+                                schedule_ind = outmachines[outmachine_ind].schedule.Count() - 1;
+                                prep_time = new List<Print2>();
+                                prep_time.Add(new Print2("準備時間", 0));
+                                if (!outmachines[outmachine_ind].schedule[schedule_ind].Contains(prep_time[0]))
+                                {
+                                    outmachines[outmachine_ind].Set_Plan(prep_time);
                                 }
                             }
                         }
@@ -437,7 +474,17 @@ namespace insatsu
                             {
                                 test_oprint = new List<string>();
                                 test_oprint.Add("準備時間");
+                                //test_oprint.Add("裏面の版準備時間");
+                                //test_schedule.Add(test_oprint);
                                 test_oomachine[outmachine_ind].Add(test_oprint);
+                            }
+                            /*準備時間が未設定なら設定する*/
+                            schedule_ind = outmachines[outmachine_ind].schedule.Count() - 1;
+                            prep_time = new List<Print2>();
+                            prep_time.Add(new Print2("準備時間", 0));
+                            if (!outmachines[outmachine_ind].schedule[schedule_ind].Contains(prep_time[0]))
+                            {
+                                outmachines[outmachine_ind].Set_Plan(prep_time);
                             }
                         }
                         circulation_cnt[cnt] = (int)Math.Ceiling((double)assignprints[cnt].circulation / (double)machines[machine_ind].rpm);  //部数カウント再設定

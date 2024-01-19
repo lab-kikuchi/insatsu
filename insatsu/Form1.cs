@@ -367,7 +367,7 @@ namespace insatsu
             form2.Show();
 
             /*以下テスト用*/
-            /*textBox2.Text = "テスト開始";
+            textBox2.Text = "テスト開始";
             for (int i = 0; i < plan1.test_oomachine.Count(); i++)
             {
                 for (int j = 0; j < plan1.test_oomachine[i].Count(); j++)
@@ -385,7 +385,7 @@ namespace insatsu
             foreach (var s in plan1.prints)
             {
                 textBox2.Text += s.name + ",";
-            }*/
+            }
 
         } 
     }

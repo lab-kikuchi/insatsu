@@ -235,8 +235,9 @@
             // textBox2
             // 
             this.textBox2.Location = new System.Drawing.Point(290, 396);
+            this.textBox2.Multiline = true;
             this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(201, 19);
+            this.textBox2.Size = new System.Drawing.Size(399, 218);
             this.textBox2.TabIndex = 15;
             // 
             // start_button
