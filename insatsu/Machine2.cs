@@ -30,7 +30,13 @@ namespace insatsu
 
         public void Set_Plan(Prints prints)
         {
+            /*
             if (check_index())
+            {
+                this.schedule.Add(prints);
+            }
+            */
+            if (check_size(prints))
             {
                 this.schedule.Add(prints);
             }
@@ -41,6 +47,10 @@ namespace insatsu
             if (size == this.schedule.Count) return false;
             return true;
         }
-
+        private bool check_size(Prints prints)
+        {
+            if (size < prints.Count) return false;
+            return true;
+        }
     }
 }

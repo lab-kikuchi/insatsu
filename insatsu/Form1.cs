@@ -386,7 +386,19 @@ namespace insatsu
             {
                 textBox2.Text += s.name + ",";
             }
-
-        } 
+            //テスト
+            for (int i = 0; i < plan1.outmachines.Count(); i++)
+            {
+                for (int j = 0; j < plan1.outmachines[i].schedule.Count(); j++)
+                {
+                    for (int k = 0; k < plan1.outmachines[i].schedule[j].Count(); k++)
+                    {
+                        textBox2.Text += i.ToString() + j.ToString() + k.ToString() + plan1.outmachines[i].schedule[j][k].name + ",";
+                    }
+                    textBox2.Text += " jj ";
+                }
+                textBox2.Text += " ii \r\n";
+            }
+        }        
     }
 }
