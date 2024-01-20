@@ -44,7 +44,8 @@ namespace insatsu
         private void Form2_Load(object sender, EventArgs e)
         {
             // カラム数を指定
-            dataGridView1.ColumnCount = endTime - beginTime + 1;
+            dataGridView1.ColumnCount = 100;
+
 
             // 行ヘッダーの作成
             for (int i = 0; i < endTime - beginTime + 1; i++)
