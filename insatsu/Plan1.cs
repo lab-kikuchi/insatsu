@@ -63,7 +63,7 @@ namespace insatsu
 
         public struct Input_Print
         {
-            public int deadline;   //納期
+            public DateTime deadline;   //納期
             public int circulation;    //部数
             public int color;  //色数
             public int backcolor;   //裏面の色数
@@ -428,7 +428,7 @@ namespace insatsu
                     {
                         apcl = countlist[max_ind];
                         apcl.assign_cnt++;  //割り当て数+1
-                        apcl.circulation_cnt = (int)Math.Ceiling((double)assignprints[max_ind].circulation / ((double)machines[machine_ind].rpm * apcl.assign_cnt));    //部数カウント更新
+                        apcl.circulation_cnt = (int)Math.Ceiling((double)apcl.rest_circulation / ((double)machines[machine_ind].rpm * apcl.assign_cnt));    //部数カウント更新
                         countlist[max_ind] = apcl;
                         /*割り当て可能領域更新*/
                         if (assignprints[max_ind].size_a != 0) { available_size = available_size - assignprints[max_ind].size_a; }

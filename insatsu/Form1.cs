@@ -60,7 +60,7 @@ namespace insatsu
 
         public struct Print
         {
-            public int deadline;   //納期
+            public DateTime deadline;   //納期
             public int circulation;    //部数
             public int color;  //色数
             public int backcolor;   //裏面の色数
@@ -104,7 +104,7 @@ namespace insatsu
             printside_comboBox.Enabled = false;
             printcolor_comboBox.Enabled = false;
             printbackcolor_comboBox.Enabled = false;
-
+            deadline_dateTimePicker.Enabled = false;
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -178,6 +178,7 @@ namespace insatsu
             printside_comboBox.Text = Prints[print_listInd].side;
             printcolor_comboBox.Text = Prints[print_listInd].color.ToString();
             printbackcolor_comboBox.Text = Prints[print_listInd].backcolor.ToString();
+            deadline_dateTimePicker.Text = Prints[print_listInd].deadline.ToString();
 
             //印刷物の要素を入力可能にする
             circulation_textBox.ReadOnly = false;
@@ -186,6 +187,7 @@ namespace insatsu
             printcolor_comboBox.Enabled = true;
             if (Prints[print_listInd].side == "両面印刷") { printbackcolor_comboBox.Enabled = true; }
             else if (Prints[print_listInd].side == "片面印刷") { printbackcolor_comboBox.Enabled = false; }
+            deadline_dateTimePicker.Enabled = true;
         }
 
         private void printcount_button_Click(object sender, EventArgs e)    //印刷物のリスト表示
@@ -200,6 +202,7 @@ namespace insatsu
             {
                 print_listBox.Items.Add("印刷物" + cnt);
                 Prints[cnt - 1].name = "印刷物" + cnt.ToString();
+                Prints[cnt - 1].deadline = DateTime.Now;    //納期の初期値,とりあえず現在の日時
             }
 
         }
@@ -242,7 +245,10 @@ namespace insatsu
                 e.Handled = true;   //数字以外の時イベントキャンセル
             }
         }
-
+        private void deadline_dateTimePicker_ValueChanged(object sender, EventArgs e)
+        {
+            Prints[print_listInd].deadline = deadline_dateTimePicker.Value;
+        }
         private void start_button_Click(object sender, EventArgs e)
         {
             int cnt;
@@ -305,10 +311,10 @@ namespace insatsu
                         textBox1.Text += Prints[cnt].name + "の裏面の色を選択して下さい\r\n";
                         no_Input++;
                     }
-                    /*if (Prints[cnt].deadline == 0) { 
+                    if (Prints[cnt].deadline == null) { 
                         textBox1.Text = Prints[cnt].name + "の納期を入力してください";
                         no_Input++;
-                    }*/
+                    }
                 }
             }
 
@@ -399,6 +405,6 @@ namespace insatsu
                 }
                 textBox2.Text += " ii \r\n";
             }
-        }        
+        }
     }
 }
