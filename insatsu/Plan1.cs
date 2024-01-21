@@ -205,10 +205,18 @@ namespace insatsu
                         int available_size_a = machines[cnt].size_a;
                         int available_size_b = machines[cnt].size_b;
                         string assign_printname = "noname";    //割り当て対象の印刷物名
+                        Input_Print[] ap;
 
                         while (available_size_a > 0 || available_size_b > 0)    //割り当て可能領域が残っているなら
                         {
-                            var ap = Array.FindAll(prints, s => s.size_a <= available_size_a && s.size_b <= available_size_b && s.color <= machines[cnt].color && s.assign == false);
+                            if (assign_printList.Count() > 0)
+                            {
+                                ap = Array.FindAll(prints, s => s.size_a <= available_size_a && s.size_b <= available_size_b && s.color <= machines[cnt].color && s.assign == false && assign_printList[0].side == s.side);
+                            }
+                            else
+                            {
+                                ap = Array.FindAll(prints, s => s.size_a <= available_size_a && s.size_b <= available_size_b && s.color <= machines[cnt].color && s.assign == false);
+                            }
                             if (ap.Count() > 0)   //要素があれば(ないとき=0)
                             {
                                 //1サイズ2色数の順に見たときに最大の印刷物を選択
@@ -291,7 +299,7 @@ namespace insatsu
                                 available_size_b = available_size_b - prints[p_index].size_b;
 
                                 //割り当て可能印刷物の更新
-                                ap = Array.FindAll(prints, s => s.size_a <= available_size_a && s.size_b <= available_size_b && s.color == machines[cnt].color + i && s.assign == false);
+                                ap = Array.FindAll(prints, s => s.size_a <= available_size_a && s.size_b <= available_size_b && s.color == machines[cnt].color + i && s.assign == false && assign_printList[0].side == s.side);
                             }
 
                         }
