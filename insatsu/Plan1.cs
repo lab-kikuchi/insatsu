@@ -242,11 +242,19 @@ namespace insatsu
                         }
                         if (available_size_a > 0)
                         {
-                            Assign_Print2(cnt, assign_printList, available_size_a);
+                            if (assign_printList[0].side == "両面印刷")
+                            {
+                                Assign_Print3(cnt, assign_printList, available_size_a);
+                            }
+                            else { Assign_Print2(cnt, assign_printList, available_size_a); }
                         }
                         else if (available_size_b > 0)
                         {
-                            Assign_Print2(cnt, assign_printList, available_size_b);
+                            if (assign_printList[0].side == "両面印刷")
+                            {
+                                Assign_Print3(cnt, assign_printList, available_size_b);
+                            }
+                            else { Assign_Print2(cnt, assign_printList, available_size_b); }
                         }
                         else
                         {
@@ -263,11 +271,18 @@ namespace insatsu
                         int available_size_a = machines[cnt].size_a;
                         int available_size_b = machines[cnt].size_b;
                         string assign_printname = "noname";
+                        Input_Print[] ap;
 
                         for (i = 1; machines[cnt].color + i <= 4; i++)
                         {
-
-                            var ap = Array.FindAll(prints, s => s.size_a <= available_size_a && s.size_b <= available_size_b && s.color == machines[cnt].color + i && s.assign == false);
+                            if (assign_printList.Count() > 0)
+                            {
+                                ap = Array.FindAll(prints, s => s.size_a <= available_size_a && s.size_b <= available_size_b && s.color == machines[cnt].color + i && s.assign == false && assign_printList[0].side == s.side);
+                            }
+                            else
+                            {
+                                ap = Array.FindAll(prints, s => s.size_a <= available_size_a && s.size_b <= available_size_b && s.color == machines[cnt].color + i && s.assign == false);
+                            }
                             while (ap.Count() > 0)
                             {
                                 if (available_size_b == 0)  //A判の場合
@@ -305,15 +320,15 @@ namespace insatsu
                         }
                         if (available_size_a > 0)
                         {
-                            Assign_Print2(cnt, assign_printList, available_size_a);
+                            Assign_Print3(cnt, assign_printList, available_size_a);
                         }
                         else if (available_size_b > 0)
                         {
-                            Assign_Print2(cnt, assign_printList, available_size_b);
+                            Assign_Print3(cnt, assign_printList, available_size_b);
                         }
                         else
                         {
-                            Assign_Print2(cnt, assign_printList, 0);
+                            Assign_Print3(cnt, assign_printList, 0);
                         }
                         assign_printList.Clear();   //割り当て印刷物用のリスト解放
                         continue;
@@ -550,6 +565,177 @@ namespace insatsu
                 }
             }
 
+        }
+        public void Assign_Print3(int machine_ind, List<Input_Print> aprints, int available_size) //印刷物の割り当てを行うメソッド3、面付け考慮版
+        {
+
+            //available_sizeは割り当て可能領域
+            List<Input_Print> assignprints = aprints;  //割り当て対象の印刷物のリスト
+            List<Input_Print> assignprints2 = aprints;
+            List<Assign_PrintsCount> countlist = new List<Assign_PrintsCount>(); //各カウント値を制御するリスト
+            List<int> remove_ind; //削除対象のインデックス確保用リスト
+            int cnt;
+            int assignprint_cnt;    //assignprintsの要素数保持
+            int outmachine_ind = outmachines.FindIndex(n => n.name == machines[machine_ind].name);//名前から出力用印刷機リストのインデックスを逆引き
+
+            int assign_ind = -1;
+            int side = 0;
+
+            for (cnt = 0; cnt < assignprints.Count(); cnt++) //各カウント値の設定
+            {
+                Assign_PrintsCount apc = new Assign_PrintsCount();
+                apc.rest_circulation = assignprints[cnt].circulation;   //残り部数
+                apc.color_cnt = (int)Math.Ceiling((double)assignprints[cnt].color / (double)machines[machine_ind].color);
+                apc.circulation_cnt = (int)Math.Ceiling((double)assignprints[cnt].circulation / (double)machines[machine_ind].rpm);
+                apc.assign_cnt = 1;
+                if (assignprints[cnt].side == "両面印刷")
+                {
+                    apc.side_cnt = 1;
+                    side = 2;
+                }
+                else if (assignprints[cnt].side == "片面印刷")
+                {
+                    apc.side_cnt = 0;
+                    side = 1;
+                }
+                countlist.Add(apc);
+            }
+
+            Assign_PrintsCount apcl = new Assign_PrintsCount();
+
+            while (assignprints.Count() > 0)    //割り当て対象印刷物があれば
+            {
+                //割り当て領域以下のサイズの印刷物が割り当て対象のリストにあるか
+                var aps = assignprints.FindAll(s => s.size_a <= available_size && s.size_b <= available_size);
+                while (aps.Count() > 0) //複数割り当てを行う印刷物を取得
+                {
+                    List<int> apind = new List<int>();
+                    foreach (var pi in aps)  //該当する印刷物のインデックス抽出
+                    {
+                        assign_ind = assignprints.FindIndex(n => n.name == pi.name);
+                        apind.Add(assign_ind);  //該当のインデックスを格納
+                    }
+
+                    int max_circulation = -1;   //残り部数が最大のものを格納する変数
+                    int max_ind = -1;
+                    for (int i = 0; i < apind.Count(); i++)
+                    {
+                        if (countlist[apind[i]].circulation_cnt > max_circulation)
+                        {
+                            max_circulation = countlist[apind[i]].circulation_cnt;  //最大値更新
+                            max_ind = apind[i];
+                        }
+                    }
+
+                    if (max_circulation > 1)    //残り部数最大の印刷物があれば割り当て数を増やす
+                    {
+                        apcl = countlist[max_ind];
+                        apcl.assign_cnt++;  //割り当て数+1
+                        //ここの部数カウント更新で,今までに刷った分を考慮するようにする
+                        apcl.circulation_cnt = (int)Math.Ceiling((double)apcl.rest_circulation / ((double)machines[machine_ind].rpm * apcl.assign_cnt));    //部数カウント更新
+                        countlist[max_ind] = apcl;
+                        /*割り当て可能領域更新*/
+                        if (assignprints[max_ind].size_a != 0) { available_size = available_size - assignprints[max_ind].size_a; }
+                        else { available_size = available_size - assignprints[max_ind].size_b; }
+                    }
+                    else
+                    {
+                        break;  //部数カウントが該当する印刷物が無ければループを抜ける
+                    }
+                    aps = assignprints.FindAll(s => s.size_a <= available_size && s.size_b <= available_size);
+                }
+
+                var min_circulationcnt = countlist.Min(c => c.circulation_cnt); //部数カウント最小の値を取り出す
+                for (int s = 0; s < side; s++)
+                {
+                    var max_colorcnt = countlist.Max(c => c.color_cnt); //色カウント最大値
+                    for (int t = 0; t < max_colorcnt; t++) //最大の色カウント分印刷
+                    {
+                        for (int u = 0; u < min_circulationcnt; u++) //最小の部数カウント分,表または裏面を印刷
+                        {
+                            /*割り当て対象印刷物を割り当てる*/
+                            outprint = new List<Print2>();
+                            for (cnt = 0; cnt < assignprints.Count(); cnt++)
+                            {
+                                if (countlist[cnt].color_cnt > 0)
+                                {
+                                    for (int i = 0; i < countlist[cnt].assign_cnt; i++)
+                                    {
+                                        outprint.Add(new Print2(assignprints[cnt].name, assignprints[cnt].circulation));
+                                    }
+                                }
+                            }
+                            outmachines[outmachine_ind].Set_Plan(outprint);
+
+                            //テスト用
+                            test_oprint = new List<string>();   //新しくインスタンス作成
+                            for (cnt = 0; cnt < assignprints.Count(); cnt++)
+                            {
+                                if (countlist[cnt].color_cnt != 0)
+                                {
+                                    for (int i = 0; i < countlist[cnt].assign_cnt; i++)
+                                    {
+                                        test_oprint.Add(assignprints[cnt].name);
+                                    }
+                                }
+                            }
+                            //test_schedule.Add(test_oprint);
+                            test_oomachine[outmachine_ind].Add(test_oprint);   //印刷機[machine_ind]に対象の印刷物を割り当て
+                        }
+                        //色替え
+                        for (cnt = 0; cnt < assignprints.Count(); cnt++)
+                        {
+                            apcl = countlist[cnt];
+                            apcl.color_cnt--;
+                            countlist[cnt] = apcl;
+                        }
+                        /*準備時間が未設定なら設定する*/
+                        Assign_preptime(outmachine_ind);
+                    }
+                    //裏面に移行
+                    for (cnt = 0; cnt < assignprints.Count(); cnt++)
+                    {
+                        apcl = countlist[cnt];
+                        apcl.color_cnt = (int)Math.Ceiling((double)assignprints[cnt].backcolor / (double)machines[machine_ind].color);
+                        countlist[cnt] = apcl;
+                    }
+                    /*準備時間が未設定なら設定する,裏面の版準備時間*/
+                    Assign_preptime(outmachine_ind);
+                }
+
+                remove_ind = new List<int>();   //削除対象の印刷物のインデックス
+                assignprint_cnt = assignprints.Count();
+
+                for (cnt = 0; cnt < assignprints.Count(); cnt++)
+                {
+                    apcl = countlist[cnt];
+                    apcl.rest_circulation = apcl.rest_circulation - (machines[machine_ind].rpm * apcl.assign_cnt * min_circulationcnt);
+                    if (apcl.rest_circulation <= 0)
+                    {
+                        /*削除対象のインデックスを確保*/
+                        remove_ind.Add(cnt);
+                    }
+                    /*割り当て可能領域更新*/
+                    if (assignprints[cnt].size_a > 0) { available_size = available_size + (assignprints[cnt].size_a * (countlist[cnt].assign_cnt - 1)); }
+                    else { available_size = available_size + (assignprints[cnt].size_b * (countlist[cnt].assign_cnt - 1)); }
+                    apcl.assign_cnt = 1;    //割り当て数を元に戻す
+                    apcl.color_cnt = (int)Math.Ceiling((double)assignprints[cnt].color / (double)machines[machine_ind].color);
+                    apcl.circulation_cnt = (int)Math.Ceiling((double)apcl.rest_circulation / ((double)machines[machine_ind].rpm * apcl.assign_cnt));
+                    countlist[cnt] = apcl;
+                }
+
+                /*ここで対象の印刷物を削除,後ろのインデックスから削除*/
+                for (int i = remove_ind.Count() - 1; i >= 0; i--)
+                {
+                    /*割り当て可能領域更新*/
+                    if (assignprints[remove_ind[i]].size_a > 0) { available_size = available_size + (assignprints[remove_ind[i]].size_a * countlist[remove_ind[i]].assign_cnt); }
+                    else { available_size = available_size + (assignprints[remove_ind[i]].size_b * countlist[remove_ind[i]].assign_cnt); }
+                    assignprints.RemoveAt(remove_ind[i]);
+                    countlist.RemoveAt(remove_ind[i]);
+                }
+
+
+            }
         }
         private void Assign_preptime(int outmachine_ind)
         {
