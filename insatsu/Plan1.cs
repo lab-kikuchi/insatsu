@@ -491,37 +491,17 @@ namespace insatsu
                 {
                     apcl = countlist[cnt];
                     apcl.circulation_cnt--; //部数カウント更新
-                    apcl.rest_circulation = apcl.rest_circulation - (machines[machine_ind].rpm * apcl.assign_cnt);
+                    apcl.rest_circulation = apcl.rest_circulation - (machines[machine_ind].rpm * apcl.assign_cnt);  //残り部数更新
                     if (apcl.circulation_cnt <= 0)   //部数カウント0
                     {
-                        if (apcl.color_cnt <= 0)
-                        {
-                            if (apcl.side_cnt <= 0)
-                            {
-                                /*削除対象のインデックスを確保*/
-                                remove_ind.Add(cnt);
-                                /*準備時間未設定なら準備時間を入れる*/
-                                Assign_preptime(outmachine_ind);
-                                continue;
-                            }
-                            else
-                            {
-                                apcl.side_cnt--;
-                                apcl.color_cnt = (int)Math.Ceiling((double)assignprints[cnt].backcolor / (double)machines[machine_ind].color) - 1;  //色数カウント再設定
+                        /*削除対象のインデックスを確保*/
+                        remove_ind.Add(cnt);
+                        /*準備時間未設定なら準備時間を入れる*/
+                        test_oprint = new List<string>();
+                        test_oprint.Add("削除準備時間");
+                        test_oomachine[outmachine_ind].Add(test_oprint);
 
-                                /*準備時間が未設定なら設定する*/
-                                Assign_preptime(outmachine_ind);
-                            }
-                        }
-                        else
-                        {
-                            apcl.color_cnt--;
-
-                            /*準備時間が未設定なら設定する*/
-                            Assign_preptime(outmachine_ind);
-                        }
-                        apcl.circulation_cnt = (int)Math.Ceiling((double)assignprints[cnt].circulation / ((double)machines[machine_ind].rpm * apcl.assign_cnt));  //部数カウント再設定
-                        apcl.rest_circulation = assignprints[cnt].circulation;   //残り部数再設定
+                        Assign_preptime(outmachine_ind);
                     }
                     countlist[cnt] = apcl;
                 }
